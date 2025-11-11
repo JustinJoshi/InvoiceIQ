@@ -1,7 +1,6 @@
 node_modules
 .env
 .vscode
-temp
 index.js
 token.json
 credentials.json
