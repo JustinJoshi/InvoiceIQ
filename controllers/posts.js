@@ -1,10 +1,40 @@
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
+const Chart = require("../models/Chart")
 const pdf2json = require("../middleware/pdf2json");
-const { Configuration, OpenAIApi } = require("openai");
 require("dotenv").config({ path: "./config/.env" });
 
 module.exports = {
+  addSource: async (req, res) => {
+    try {
+      console.log(req.body.category)
+      await Chart.create({
+        category: req.body.category,
+        name: req.body.name,
+        value: req.body.value,
+        date: req.body.date,
+        notes: req.body.notes,
+        user: req.user.id,
+      });
+      console.log("Post has been added!");
+      res.redirect("/addSource");
+    } catch (err) {
+      console.log(err);
+    }
+  },
+  getChartData: async (req, res) => {
+    try {
+      const chartData = await Chart.find().sort({ createdAt: "desc" }).lean();
+      res.send(chartData).status(200)
+      //Send user data to client
+      //   Chart.find().toArray((err, result) => {
+      //   if (err) return console.log(err)
+      //   res.send(result).status(200)
+      // })
+    } catch (err) {
+      console.log(err);
+    }
+  },
   getConvert: async (req, res) => {
     try {
       const post = await Post.findById(req.params.id);
