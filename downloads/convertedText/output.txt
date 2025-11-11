@@ -1,0 +1,60 @@
+ 
+JUSTIN JOSHI 
+Software Engineer 
+SUMMARY 
+Creative, detail-oriented, software engineer with a deep interest in volunteering. Proven track 
+record of creating and implementing successful front and back end web applications. 
+Looking to bring my skills to a non-profit with lasting impact.. 
+WORK EXPERIENCE 
+Software Engineer at 100Devs, Los Angeles, CA 
+January 2025 — Present 
+●  Collaborated with a team of developers to build modern and responsive web 
+ applications using best practices 
+●  Built semantically structured full stack web applications 
+●  Applied agile methodologies like SCRUM for project management 
+ 
+Recent Projects:  
+InvoiceIQ Tracker (Fullstack Web App) – Automatically parses emails to extract PDF invoices. 
+The PDFs are converted into JSON format, capturing data such as items purchased, quantities, 
+purchase dates, and pricing. This data can be integrated with analytics services, enabling 
+business owners to gain insights into their purchasing metrics. 
+Bubble’s Kitchen (HTML & CSS Site) – Designed a visually appealing website for Bubble’s 
+Kitchen. The site features a warm and inviting theme,  fully customized promotional video, 
+and an optimized mobile version. 
+Other Projects: Lakeside Slots Virtual Casino, Los Angeles Wonders Society APOD Web 
+App with NASA API integration, On-Demand Color Palette Changer for Partnered Twitch 
+Streamer, and many more. 
+ 
+Project Manager at Isha Foundation, McMinnville, TN 
+Feb 2023 — Nov 2024 
+Managed an accommodation operation of over 300 rooms, created an inventory 
+management system resulting in a 15% over stocking reduction. Collaborated with a product 
+warehouse operation featuring 200+ offerings to boost productivity and improve task 
+documentation. 
+ 
+Service Professional at Olive Garden | Boston, MA 
+January 2021 — November 2023 
+Ranked top 4 servers overall in the restaurant with 98% survey approval rating. Customer 
+satisfaction rating of 4.8 stars overall. 
+ 
+CONTACT 
+856-986-6169 
+JustinJoshi@proton.me 
+justinjoshi.com 
+github.com/justinjoshi 
+linkedin.com/in/justin 
+@justinjoshi 
+ 
+SKILLS 
+HTML 
+CSS 
+Javascript 
+React 
+React Native 
+Node 
+MongoDB 
+OOP 
+Web Accessibility  
+Project Management 
+ 
+----------------Page (0) Break----------------
