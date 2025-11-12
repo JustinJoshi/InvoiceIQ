@@ -5,6 +5,14 @@ const pdf2json = require("../middleware/pdf2json");
 require("dotenv").config({ path: "./config/.env" });
 
 module.exports = {
+  getSourceRainbow: async (req, res) => {
+    try {
+      const posts = await Post.find({ user: req.user.id });
+      res.render("addSourceRainbow.ejs", { posts: posts, user: req.user });
+    } catch (err) {
+      console.log(err);
+    }
+  },
   addSource: async (req, res) => {
     try {
       console.log(req.body.category)

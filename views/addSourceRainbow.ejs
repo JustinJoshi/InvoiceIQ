@@ -13,14 +13,40 @@
             --primary: #3b82f6;
             --primary-hover: #2563eb;
             --secondary: #8b5cf6;
-            --background: #0f172a;
-            --surface: #1e293b;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --border: #334155;
+            --background: #000000;
+            --surface: #0a0a0a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border: #1a1a1a;
             --success: #10b981;
             --warning: #f59e0b;
             --error: #ef4444;
+        }
+
+        @keyframes rainbow-border {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
         }
 
         * {
@@ -42,11 +68,53 @@
             width: 100%;
         }
 
+        /* Rainbow border effect */
+        .rainbow-border {
+            position: relative;
+            background: var(--surface);
+            border-radius: 1rem;
+        }
+
+        .rainbow-border::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(90deg,
+                    #ff0080, #ff0080, #ff8c00, #40e0d0, #4169e1, #8a2be2, #ff0080);
+            background-size: 300% 300%;
+            border-radius: 1rem;
+            z-index: -1;
+            animation: rainbow-border 6s ease infinite;
+        }
+
+        .rainbow-border-static {
+            position: relative;
+            background: var(--surface);
+            border-radius: 1rem;
+        }
+
+        .rainbow-border-static::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(135deg,
+                    #ff0080 0%, #ff8c00 25%, #40e0d0 50%, #4169e1 75%, #8a2be2 100%);
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
         /* Sidebar */
         .sidebar {
             width: 16rem;
             background: var(--surface);
-            border-right: 1px solid var(--border);
+            border-right: 1px solid #1a1a1a;
             padding: 1.5rem;
             position: fixed;
             height: 100vh;
@@ -68,6 +136,10 @@
 
         .logo-icon {
             font-size: 2rem;
+            background: linear-gradient(135deg, #ff0080, #ff8c00, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .sidebar-nav {
@@ -98,13 +170,33 @@
         }
 
         .nav-item:hover {
-            background: var(--background);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-primary);
         }
 
         .nav-item.active {
-            background: var(--primary);
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(64, 224, 208, 0.2));
             color: white;
+            border: 1px solid rgba(255, 0, 128, 0.3);
+        }
+
+        .nav-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SVG Icons */
+        .icon {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
         }
 
         /* Main Content */
@@ -116,7 +208,7 @@
 
         .top-nav {
             background: var(--surface);
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid #1a1a1a;
             padding: 1rem 2rem;
             display: flex;
             align-items: center;
@@ -124,6 +216,7 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(10px);
         }
 
         .breadcrumb {
@@ -142,30 +235,19 @@
 
         .search-input {
             padding: 0.5rem 1rem;
-            background: var(--background);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 0.5rem;
             color: var(--text-primary);
             font-size: 0.875rem;
             width: 15rem;
+            transition: all 0.2s ease;
         }
 
         .search-input:focus {
             outline: none;
-            border-color: var(--primary);
-        }
-
-        .user-menu {
-            display: flex;
-            align-items: center;
-            gap: 0.75rem;
-        }
-
-        .user-avatar {
-            width: 2rem;
-            height: 2rem;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-color: #ff0080;
+            background: rgba(255, 255, 255, 0.08);
         }
 
         /* Page Content */
@@ -182,6 +264,10 @@
             font-size: 2rem;
             font-weight: 700;
             margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ff0080, #ff8c00, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .page-header p {
@@ -205,11 +291,8 @@
 
         /* Chart Panel (Manual Entry) */
         .chart-panel {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
             padding: 1.5rem;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
         }
 
         .panel-header {
@@ -239,8 +322,8 @@
         .form-select {
             width: 100%;
             padding: 0.75rem 1rem;
-            background: var(--background);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 0.5rem;
             color: var(--text-primary);
             font-size: 0.875rem;
@@ -250,15 +333,16 @@
         .form-input:focus,
         .form-select:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #ff0080;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.1);
         }
 
         .form-textarea {
             width: 100%;
             padding: 0.75rem 1rem;
-            background: var(--background);
-            border: 1px solid var(--border);
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 0.5rem;
             color: var(--text-primary);
             font-size: 0.875rem;
@@ -269,8 +353,9 @@
 
         .form-textarea:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            border-color: #ff0080;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.1);
         }
 
         .form-help {
@@ -289,6 +374,7 @@
             width: 1.25rem;
             height: 1.25rem;
             cursor: pointer;
+            accent-color: #ff0080;
         }
 
         .btn {
@@ -302,24 +388,25 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
             color: white;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 4px 20px rgba(255, 0, 128, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-1px);
-            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+            box-shadow: 0 6px 24px rgba(255, 0, 128, 0.5);
         }
 
         .btn-secondary {
-            background: var(--surface);
+            background: rgba(255, 255, 255, 0.05);
             color: var(--text-primary);
-            border: 1px solid var(--border);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .btn-secondary:hover {
-            background: var(--border);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #40e0d0;
         }
 
         .btn-group {
@@ -329,9 +416,6 @@
 
         /* Info Box */
         .info-box {
-            background: rgba(59, 130, 246, 0.05);
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            border-radius: 1rem;
             padding: 1.5rem;
             margin-bottom: 2rem;
         }
@@ -358,7 +442,11 @@
             content: '→';
             position: absolute;
             left: 0;
-            color: var(--primary);
+            background: linear-gradient(135deg, #ff0080, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
         }
 
         /* Source Grid */
@@ -369,19 +457,15 @@
         }
 
         .source-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 1rem;
             padding: 1.5rem;
             cursor: pointer;
-            transition: all 0.2s ease;
+            transition: all 0.3s ease;
             position: relative;
         }
 
         .source-card:hover {
-            transform: translateY(-4px);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
-            border-color: var(--primary);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(255, 0, 128, 0.3);
         }
 
         .source-icon {
@@ -411,13 +495,15 @@
         }
 
         .badge-popular {
-            background: rgba(59, 130, 246, 0.1);
-            color: var(--primary);
+            background: rgba(255, 0, 128, 0.2);
+            color: #ff0080;
+            border: 1px solid rgba(255, 0, 128, 0.3);
         }
 
         .badge-new {
-            background: rgba(16, 185, 129, 0.1);
+            background: rgba(16, 185, 129, 0.15);
             color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
         }
 
         /* Modal */
@@ -428,16 +514,15 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.85);
             z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 2rem;
+            backdrop-filter: blur(10px);
         }
 
         .modal-content {
-            background: var(--surface);
-            border: 1px solid var(--border);
             border-radius: 1rem;
             max-width: 40rem;
             width: 100%;
@@ -447,7 +532,7 @@
 
         .modal-header {
             padding: 1.5rem;
-            border-bottom: 1px solid var(--border);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -475,13 +560,7 @@
             transition: all 0.2s ease;
         }
 
-        .containerData {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .theme-button {
+        .btn-secondary {
             margin-bottom: 2rem;
             padding: 0.5rem 1rem;
             background: var(--surface);
@@ -494,8 +573,21 @@
             transition: all 0.2s ease;
         }
 
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #40e0d0;
+        }
+
+        .containerData {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-button {}
+
         .close-btn:hover {
-            background: var(--background);
+            background: rgba(255, 255, 255, 0.1);
             color: var(--text-primary);
         }
 
@@ -559,7 +651,7 @@
         <aside class="sidebar">
             <div class="sidebar-header">
                 <div class="logo">
-                    <!-- <div class="logo-icon">📊</div> -->
+                    <div class="logo-icon">◆</div>
                     <span>InvoiceIQ</span>
                 </div>
             </div>
@@ -567,8 +659,7 @@
             <nav class="sidebar-nav">
                 <div class="nav-section">
                     <div class="nav-section-title">Main</div>
-                    <a href="/dashboard" class="nav-item">
-                        <!-- <span>🏠</span> -->
+                    <a href="/dashboardRainbow" class="nav-item">
                         <div class="nav-icon">
                             <svg class="icon" viewBox="0 0 24 24">
                                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
@@ -577,39 +668,20 @@
                         </div>
                         <span>Dashboard</span>
                     </a>
-                    <!-- <a href="#" class="nav-item">
-                        <span>📈</span>
-                        <span>Metrics</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <span>📊</span>
-                        <span>Analytics</span>
-                    </a> -->
                 </div>
 
                 <div class="nav-section">
                     <div class="nav-section-title">Data Sources</div>
-                    <!-- <a href="#" class="nav-item">
-                        <span>🔌</span>
-                        <span>Connections</span>
-                    </a> -->
-                    <a href="/addSource" class="nav-item active">
-                        <!-- <span>➕</span> -->
+                    <a href="/addSourceRainbow" class="nav-item active">
+                        <div class="nav-icon">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </div>
                         <span>Add Source</span>
                     </a>
                 </div>
-
-                <!-- <div class="nav-section">
-                    <div class="nav-section-title">Settings</div>
-                    <a href="#" class="nav-item">
-                        <span>🔔</span>
-                        <span>Alerts</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <span>⚙️</span>
-                        <span>Settings</span>
-                    </a>
-                </div> -->
             </nav>
         </aside>
 
@@ -626,10 +698,6 @@
 
                 <div class="top-nav-right">
                     <input type="text" class="search-input" placeholder="Search data sources...">
-                    <!-- <div class="user-menu">
-                        <div class="user-avatar"></div>
-                        <span>Alex Chen</span>
-                    </div> -->
                 </div>
             </header>
 
@@ -639,17 +707,11 @@
                         <h1>Add Data Source</h1>
                         <p>Connect external services to track and visualize your personal metrics</p>
                     </div>
-                    <form class="theme-button" action="/addSourceRainbow">
+                    <form class="theme-button" action="/addSource">
                         <button class="btn-secondary">Switch Themes!</button>
                     </form>
                 </section>
-                <!-- <div id="successAlert" class="alert alert-success">
-                    ✅ Data source connected successfully!
-                </div>
 
-                <div id="manualEntryAlert" class="alert alert-success">
-                    ✅ Manual data entry added successfully!
-                </div> -->
                 <div id="successAlert" class="alert alert-success">
                     Data source connected successfully!
                 </div>
@@ -659,11 +721,10 @@
                 </div>
 
                 <!-- Manual Entry Section -->
-                <div class="chart-panel" style="margin-bottom: 3rem;">
+                <div class="chart-panel rainbow-border-static" style="margin-bottom: 3rem;">
                     <div class="panel-header">
-                        <!-- <h3 class="panel-title">✏️ Quick Manual Entry</h3> -->
                         <h3 class="panel-title">Quick Manual Entry</h3>
-
+                        <!-- <h3 class="panel-title">✏️ Quick Manual Entry</h3> -->
                         <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Add data points
                             manually without connecting an API</p>
                     </div>
@@ -675,15 +736,14 @@
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label class="form-label" for="category">Category</label>
                                 <select name="category" id="metricCategory" class="form-select" required>
-                                    <!-- <option value="">Select category...</option>
-                                    <option value="finance">💰 Finance</option>
+                                    <option value="">Select category...</option>
+                                    <!-- <option value="finance">💰 Finance</option>
                                     <option value="fitness">🏃 Fitness</option>
                                     <option value="productivity">💻 Productivity</option>
                                     <option value="health">❤️ Health</option>
                                     <option value="mood">😊 Mood</option>
                                     <option value="sleep">😴 Sleep</option>
                                     <option value="custom">🔧 Custom</option> -->
-                                    <option value="">Select category...</option>
                                     <option value="finance">Finance</option>
                                     <option value="fitness">Fitness</option>
                                     <option value="productivity">Productivity</option>
@@ -718,14 +778,12 @@
                                 placeholder="Add a note about this entry...">
                         </div>
 
-                        <button type="submit" class="btn btn-primary">➕ Add Entry</button>
+                        <button type="submit" class="btn btn-primary">Add Entry</button>
                     </form>
                 </div>
 
-                <div class="info-box">
-                    <!-- <h3>💡 Popular Integrations</h3> -->
+                <div class="info-box rainbow-border-static">
                     <h3>Popular Integrations</h3>
-
                     <ul>
                         <li>Fitness trackers sync your activity, heart rate, and sleep data</li>
                         <li>Productivity tools monitor your work hours and focus time</li>
@@ -736,58 +794,58 @@
 
                 <!-- Source Cards Grid -->
                 <div class="source-grid">
-                    <div class="source-card" onclick="openModal('fitbit')">
+                    <div class="source-card rainbow-border" onclick="openModal('fitbit')">
                         <!-- <div class="source-icon">🏃</div> -->
                         <h3>Fitbit</h3>
                         <p>Track steps, heart rate, calories, and sleep quality from your Fitbit device.</p>
                         <span class="badge badge-popular">Popular</span>
                     </div>
 
-                    <div class="source-card" onclick="openModal('strava')">
+                    <div class="source-card rainbow-border" onclick="openModal('strava')">
                         <!-- <div class="source-icon">🚴</div> -->
                         <h3>Strava</h3>
                         <p>Import running and cycling activities, routes, and performance metrics.</p>
                         <span class="badge badge-popular">Popular</span>
                     </div>
 
-                    <div class="source-card" onclick="openModal('github')">
+                    <div class="source-card rainbow-border" onclick="openModal('github')">
                         <!-- <div class="source-icon">💻</div> -->
                         <h3>GitHub</h3>
                         <p>Monitor your coding activity, commits, pull requests, and contributions.</p>
                         <span class="badge badge-new">New</span>
                     </div>
 
-                    <div class="source-card" onclick="openModal('googlesheets')">
+                    <div class="source-card rainbow-border" onclick="openModal('googlesheets')">
                         <!-- <div class="source-icon">📋</div> -->
                         <h3>Google Sheets</h3>
                         <p>Pull data from spreadsheets for custom tracking and visualization.</p>
                     </div>
 
-                    <div class="source-card" onclick="openModal('todoist')">
+                    <div class="source-card rainbow-border" onclick="openModal('todoist')">
                         <!-- <div class="source-icon">✅</div> -->
                         <h3>Todoist</h3>
                         <p>Track task completion rates, productivity streaks, and project progress.</p>
                     </div>
 
-                    <div class="source-card" onclick="openModal('spotify')">
+                    <div class="source-card rainbow-border" onclick="openModal('spotify')">
                         <!-- <div class="source-icon">🎵</div> -->
                         <h3>Spotify</h3>
                         <p>Analyze listening habits, favorite genres, and music discovery trends.</p>
                     </div>
 
-                    <div class="source-card" onclick="openModal('rescuetime')">
+                    <div class="source-card rainbow-border" onclick="openModal('rescuetime')">
                         <!-- <div class="source-icon">⏰</div> -->
                         <h3>RescueTime</h3>
                         <p>Monitor screen time, app usage, and productivity scores automatically.</p>
                     </div>
 
-                    <div class="source-card" onclick="openModal('myfitnesspal')">
+                    <div class="source-card rainbow-border" onclick="openModal('myfitnesspal')">
                         <!-- <div class="source-icon">🍎</div> -->
                         <h3>MyFitnessPal</h3>
                         <p>Track nutrition, calorie intake, macros, and meal logging data.</p>
                     </div>
 
-                    <div class="source-card" onclick="openModal('custom')">
+                    <div class="source-card rainbow-border" onclick="openModal('custom')">
                         <!-- <div class="source-icon">🔧</div> -->
                         <h3>Custom API</h3>
                         <p>Connect any REST API endpoint to import custom data sources.</p>
@@ -799,7 +857,7 @@
 
     <!-- Modal -->
     <div id="configModal" class="modal">
-        <div class="modal-content">
+        <div class="modal-content rainbow-border-static">
             <div class="modal-header">
                 <h2 class="modal-title" id="modalTitle">Configure Data Source</h2>
                 <button class="close-btn" onclick="closeModal()">&times;</button>

@@ -10,6 +10,7 @@ const { ensureAuth, ensureGuest } = require("../middleware/auth");
 router.get("/", homeController.getIndex);
 router.get("/dashboard", ensureAuth, postsController.getProfile);
 router.get("/dashboardRainbow", ensureAuth, postsController.getRainbow);
+router.get("/addSourceRainbow", ensureAuth, postsController.getSourceRainbow);
 router.get("/dashboardChart", ensureAuth, postsController.getChartData)
 router.get("/makeChart", ensureAuth, chartController.makeChart)
 router.get("/addSource", ensureAuth, postsController.getSource);
