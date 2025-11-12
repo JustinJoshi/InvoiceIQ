@@ -318,6 +318,10 @@
             color: var(--text-secondary);
         }
 
+        select{
+            background-color: #121212 !important;
+        }
+
         .form-input,
         .form-select {
             width: 100%;
@@ -735,7 +739,7 @@
                             style="display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1rem; margin-bottom: 1rem;">
                             <div class="form-group" style="margin-bottom: 0;">
                                 <label class="form-label" for="category">Category</label>
-                                <select name="category" id="metricCategory" class="form-select" required>
+                                <select name="category" id="metricCategory" class="form-select special" required>
                                     <option value="">Select category...</option>
                                     <!-- <option value="finance">💰 Finance</option>
                                     <option value="fitness">🏃 Fitness</option>
