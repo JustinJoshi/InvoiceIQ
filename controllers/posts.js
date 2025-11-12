@@ -52,6 +52,14 @@ module.exports = {
       console.log(err);
     }
   },
+  getRainbow: async (req, res) => {
+    try {
+      const posts = await Post.find({ user: req.user.id });
+      res.render("dashboardRainbow.ejs", { posts: posts, user: req.user });
+    } catch (err) {
+      console.log(err);
+    }
+  },
   getSource: async (req, res) => {
     try {
       const posts = await Post.find({ user: req.user.id });

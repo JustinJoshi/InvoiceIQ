@@ -29,7 +29,7 @@ window.onload = async function makeChart() {
       throw new Error(`Response status: ${response.status}`);
     }
     const result = await response.json()
-    
+
     const charts = result.charts
 
     //create chart variables
@@ -76,7 +76,25 @@ window.onload = async function makeChart() {
         }
       }
     });
+
+    console.log(charts[0].date, "charts")
+
+
+    //make list of data points
+    charts.forEach((e, i) => {
+      console.log(charts[i])
+      document.querySelector('#tbody').innerHTML += `
+                            <tr>
+                                <td>${charts[i].category}</td>
+                                <td>${charts[i].name}</td>
+                                <td>${charts[i].value}</td>
+                                <td>${charts[i].date}</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr>`
+    })
+
   } catch (error) {
     console.error(error.message);
   }
 }
+
