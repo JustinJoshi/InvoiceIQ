@@ -1,0 +1,791 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoiceIQ - Personal Metrics Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <!-- style & layout by claude -->
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --secondary: #8b5cf6;
+            --background: #0f172a;
+            --surface: #1e293b;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --border: #334155;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        @keyframes rainbow-border {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Rainbow border effect */
+        .rainbow-border {
+            position: relative;
+            background: var(--surface);
+            border-radius: 1rem;
+        }
+
+        .rainbow-border::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(90deg,
+                    #ff0080, #ff0080, #ff8c00, #40e0d0, #4169e1, #8a2be2, #ff0080);
+            background-size: 300% 300%;
+            border-radius: 1rem;
+            z-index: -1;
+            animation: rainbow-border 6s ease infinite;
+        }
+
+        .rainbow-border-static {
+            position: relative;
+            background: var(--surface);
+            border-radius: 1rem;
+        }
+
+        .rainbow-border-static::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(135deg,
+                    #ff0080 0%, #ff8c00 25%, #40e0d0 50%, #4169e1 75%, #8a2be2 100%);
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 16rem;
+            background: var(--surface);
+            border-right: 1px solid var(--border);
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .nav-item:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 16rem;
+            width: calc(100% - 16rem);
+        }
+
+        .top-nav {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            width: 15rem;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: var(--primary);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 2rem;
+            height: 2rem;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        /* Dashboard Content */
+        .dashboard-content {
+            padding: 2rem;
+            max-width: 100%;
+        }
+
+        .dashboard-header {
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .dashboard-title h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
+        }
+
+        .dashboard-actions {
+            display: flex;
+            gap: 0.75rem;
+            align-items: center;
+        }
+
+        .btn-icon {
+            padding: 0.5rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-size: 1.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-icon:hover {
+            background: var(--border);
+        }
+
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border: .1px solid var(--border);
+            border-radius: 1rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: var(--border);
+        }
+
+        .btn-primary {
+            padding: 0.5rem 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        /* Stats Grid */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            transition: all 0.2s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+
+        .stat-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1rem;
+        }
+
+        .stat-title {
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        .stat-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.25rem;
+        }
+
+        .stat-icon.blue {
+            background: rgba(59, 130, 246, 0.1);
+        }
+
+        .stat-icon.green {
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        .stat-icon.orange {
+            background: rgba(245, 158, 11, 0.1);
+        }
+
+        .stat-icon.purple {
+            background: rgba(139, 92, 246, 0.1);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+            font-size: 0.875rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--error);
+        }
+
+        /* Chart Panel */
+        .chart-panel {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .panel-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+
+        .time-range-selector {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        .time-range-btn {
+            padding: 0.5rem 1rem;
+            background: transparent;
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .time-range-btn:hover {
+            background: var(--background);
+        }
+
+        .time-range-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        .chart-container {
+            width: 100%;
+            height: 20rem;
+            position: relative;
+        }
+
+        /* Data Table */
+        .data-table {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 1rem;
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead {
+            background: var(--background);
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-top: 1px solid var(--border);
+            font-size: 0.875rem;
+        }
+
+        .table tbody tr:hover {
+            background: var(--background);
+        }
+
+        .badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success);
+        }
+
+
+
+
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 14rem;
+            }
+
+            .main-content {
+                margin-left: 14rem;
+                width: calc(100% - 14rem);
+            }
+
+            .dashboard-grid {
+                grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .top-nav {
+                padding: 1rem;
+            }
+
+            .search-input {
+                width: 10rem;
+            }
+
+            .dashboard-content {
+                padding: 1rem;
+            }
+
+            .dashboard-title {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .dashboard-actions {
+                width: 100%;
+                flex-wrap: wrap;
+            }
+
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .chart-container {
+                height: 15rem;
+            }
+
+            .table {
+                font-size: 0.75rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <!-- <div class="logo-icon">📊</div> -->
+                    <span>InvoiceIQ</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="/dashboard" class="nav-item active">
+                        <!-- <span>🏠</span> -->
+                        <span>Dashboard</span>
+                    </a>
+                    <!-- <a href="#" class="nav-item">
+                        <span>📈</span>
+                        <span>Metrics</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span>📊</span>
+                        <span>Analytics</span>
+                    </a> -->
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Data Sources</div>
+                    <!-- <a href="#" class="nav-item">
+                        <span>🔌</span>
+                        <span>Connections</span>
+                    </a> -->
+                    <a href="/addSource" class="nav-item">
+                        <!-- <span>➕</span> -->
+                        <span>Add Source</span>
+                    </a>
+                </div>
+
+                <!-- <div class="nav-section">
+                    <div class="nav-section-title">Settings</div>
+                    <a href="#" class="nav-item">
+                        <span>🔔</span>
+                        <span>Alerts</span>
+                    </a>
+                    <a href="#" class="nav-item">
+                        <span>⚙️</span>
+                        <span>Settings</span>
+                    </a>
+                </div> -->
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="breadcrumb">
+                    <span>InvoiceIQ</span>
+                    <span>/</span>
+                    <span>Dashboard</span>
+                </div>
+
+                <div class="top-nav-right">
+                    <input type="text" class="search-input" placeholder="Search metrics...">
+                    <!-- <div class="user-menu">
+                        <div class="user-avatar"></div>
+                        <span>Alex Chen</span>
+                    </div> -->
+                </div>
+            </header>
+
+            <div class="dashboard-content">
+                <div class="dashboard-header">
+                    <div class="dashboard-title">
+                        <div>
+                            <h1>Dashboard Overview</h1>
+                            <p style="color: var(--text-secondary);">Monitor your personal metrics in real-time</p>
+                        </div>
+                        <div class="dashboard-actions">
+                            <!-- <button class="btn-icon">🔄</button> -->
+
+                            <form class="rainbow-border" action="/dashboardRainbow">
+                                <button class="btn-secondary">Switch Themes!</button>
+                            </form>
+
+                            <!-- <button class="btn-secondary">⏱️ Last 7 days</button>
+                            <button class="btn-primary">➕ Add Panel</button> -->
+                            <!-- <form action="/makeChart">
+                                <button>Make Chart</button>
+                            </form> -->
+
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stats Grid -->
+                <div class="dashboard-grid">
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Daily Steps</span>
+                            <!-- <div class="stat-icon blue">👟</div> -->
+                        </div>
+                        <div class="stat-value">8,247</div>
+                        <div class="stat-change positive">
+                            <span>↑</span>
+                            <span>12% from last week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Active Hours</span>
+                            <!-- <div class="stat-icon green">⏱️</div> -->
+                        </div>
+                        <div class="stat-value">6.5h</div>
+                        <div class="stat-change positive">
+                            <span>↑</span>
+                            <span>8% from last week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Calories Burned</span>
+                            <!-- <div class="stat-icon orange">🔥</div> -->
+                        </div>
+                        <div class="stat-value">2,145</div>
+                        <div class="stat-change negative">
+                            <span>↓</span>
+                            <span>3% from last week</span>
+                        </div>
+                    </div>
+
+                    <div class="stat-card">
+                        <div class="stat-header">
+                            <span class="stat-title">Sleep Quality</span>
+                            <!-- <div class="stat-icon purple">😴</div> -->
+                        </div>
+                        <div class="stat-value">87%</div>
+                        <div class="stat-change positive">
+                            <span>↑</span>
+                            <span>5% from last week</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Chart Panel -->
+                <div class="chart-panel">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Activity Trends</h3>
+                        <!-- <div class="time-range-selector">
+                            <button class="time-range-btn">24h</button>
+                            <button class="time-range-btn active">7d</button>
+                            <button class="time-range-btn">30d</button>
+                            <button class="time-range-btn">90d</button>
+                        </div> -->
+                    </div>
+                    <div class="chart-container">
+                        <canvas id="activityChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Activity Table -->
+                <div class="data-table">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Name</th>
+                                <th>Value</th>
+                                <th>Date</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tbody">
+                            <!-- <tr>
+                                <td>Oct 26, 2024</td>
+                                <td>Morning Run</td>
+                                <td>45 min</td>
+                                <td>425 kcal</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Oct 25, 2024</td>
+                                <td>Cycling</td>
+                                <td>60 min</td>
+                                <td>520 kcal</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Oct 24, 2024</td>
+                                <td>Yoga</td>
+                                <td>30 min</td>
+                                <td>180 kcal</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr>
+                            <tr>
+                                <td>Oct 23, 2024</td>
+                                <td>Weight Training</td>
+                                <td>50 min</td>
+                                <td>310 kcal</td>
+                                <td><span class="badge badge-success">Completed</span></td>
+                            </tr> -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>

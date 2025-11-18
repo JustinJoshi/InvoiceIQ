@@ -1,0 +1,942 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>InvoiceIQ - Add Data Source</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --secondary: #8b5cf6;
+            --background: #000000;
+            --surface: #0a0a0a;
+            --text-primary: #ffffff;
+            --text-secondary: #a0a0a0;
+            --border: #1a1a1a;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --error: #ef4444;
+        }
+
+        @keyframes rainbow-border {
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Rainbow border effect */
+        .rainbow-border {
+            position: relative;
+            background: var(--surface);
+            border-radius: 1rem;
+        }
+
+        .rainbow-border::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(90deg,
+                    #ff0080, #ff0080, #ff8c00, #40e0d0, #4169e1, #8a2be2, #ff0080);
+            background-size: 300% 300%;
+            border-radius: 1rem;
+            z-index: -1;
+            animation: rainbow-border 6s ease infinite;
+        }
+
+        .rainbow-border-static {
+            position: relative;
+            background: var(--surface);
+            border-radius: 1rem;
+        }
+
+        .rainbow-border-static::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: -1px;
+            right: -1px;
+            bottom: -1px;
+            background: linear-gradient(135deg,
+                    #ff0080 0%, #ff8c00 25%, #40e0d0 50%, #4169e1 75%, #8a2be2 100%);
+            border-radius: 1rem;
+            z-index: -1;
+            opacity: 0.6;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 16rem;
+            background: var(--surface);
+            border-right: 1px solid #1a1a1a;
+            padding: 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header {
+            margin-bottom: 2rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+            background: linear-gradient(135deg, #ff0080, #ff8c00, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .sidebar-nav {
+            display: flex;
+            flex-direction: column;
+            gap: 2rem;
+        }
+
+        .nav-section-title {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.5rem;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            font-size: 0.875rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, rgba(255, 0, 128, 0.2), rgba(64, 224, 208, 0.2));
+            color: white;
+            border: 1px solid rgba(255, 0, 128, 0.3);
+        }
+
+        .nav-icon {
+            width: 1.25rem;
+            height: 1.25rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* SVG Icons */
+        .icon {
+            width: 100%;
+            height: 100%;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 16rem;
+            width: calc(100% - 16rem);
+        }
+
+        .top-nav {
+            background: var(--surface);
+            border-bottom: 1px solid #1a1a1a;
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .top-nav-right {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .search-input {
+            padding: 0.5rem 1rem;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            width: 15rem;
+            transition: all 0.2s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #ff0080;
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        /* Page Content */
+        .page-content {
+            padding: 2rem;
+            max-width: 100%;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            background: linear-gradient(135deg, #ff0080, #ff8c00, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .page-header p {
+            color: var(--text-secondary);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            display: none;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid var(--success);
+            color: var(--success);
+        }
+
+        /* Chart Panel (Manual Entry) */
+        .chart-panel {
+            padding: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .panel-header {
+            margin-bottom: 1.5rem;
+        }
+
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: var(--text-secondary);
+        }
+
+        select{
+            background-color: #121212 !important;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: #ff0080;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.1);
+        }
+
+        .form-textarea {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+            min-height: 8rem;
+            font-family: 'Inter', monospace;
+            resize: vertical;
+        }
+
+        .form-textarea:focus {
+            outline: none;
+            border-color: #ff0080;
+            background: rgba(255, 255, 255, 0.05);
+            box-shadow: 0 0 0 3px rgba(255, 0, 128, 0.1);
+        }
+
+        .form-help {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+            margin-top: 0.5rem;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 1.25rem;
+            height: 1.25rem;
+            cursor: pointer;
+            accent-color: #ff0080;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 0.5rem;
+            font-weight: 600;
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #ff0080, #ff8c00);
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 0, 128, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 24px rgba(255, 0, 128, 0.5);
+        }
+
+        .btn-secondary {
+            background: rgba(255, 255, 255, 0.05);
+            color: var(--text-primary);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #40e0d0;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 1rem;
+        }
+
+        /* Info Box */
+        .info-box {
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-box h3 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-box ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .info-box li {
+            color: var(--text-secondary);
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .info-box li::before {
+            content: '→';
+            position: absolute;
+            left: 0;
+            background: linear-gradient(135deg, #ff0080, #40e0d0);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            font-weight: bold;
+        }
+
+        /* Source Grid */
+        .source-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(18rem, 1fr));
+            gap: 1.5rem;
+        }
+
+        .source-card {
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .source-card:hover {
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: 0 12px 40px rgba(255, 0, 128, 0.3);
+        }
+
+        .source-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .source-card h3 {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .source-card p {
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+            line-height: 1.6;
+        }
+
+        .badge {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .badge-popular {
+            background: rgba(255, 0, 128, 0.2);
+            color: #ff0080;
+            border: 1px solid rgba(255, 0, 128, 0.3);
+        }
+
+        .badge-new {
+            background: rgba(16, 185, 129, 0.15);
+            color: var(--success);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .modal-content {
+            border-radius: 1rem;
+            max-width: 40rem;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 2rem;
+            cursor: pointer;
+            line-height: 1;
+            padding: 0;
+            width: 2rem;
+            height: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 0.25rem;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary {
+            margin-bottom: 2rem;
+            padding: 0.5rem 1rem;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #40e0d0;
+        }
+
+        .containerData {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .theme-button {}
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--text-primary);
+        }
+
+        .modal form {
+            padding: 1.5rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 14rem;
+            }
+
+            .main-content {
+                margin-left: 14rem;
+                width: calc(100% - 14rem);
+            }
+
+            .source-grid {
+                grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+                position: fixed;
+            }
+
+            .main-content {
+                margin-left: 0;
+                width: 100%;
+            }
+
+            .top-nav {
+                padding: 1rem;
+            }
+
+            .search-input {
+                width: 10rem;
+            }
+
+            .page-content {
+                padding: 1rem;
+            }
+
+            .source-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal-content {
+                max-width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">◆</div>
+                    <span>InvoiceIQ</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Main</div>
+                    <a href="/dashboardRainbow" class="nav-item">
+                        <div class="nav-icon">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                                <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                            </svg>
+                        </div>
+                        <span>Dashboard</span>
+                    </a>
+                </div>
+
+                <div class="nav-section">
+                    <div class="nav-section-title">Data Sources</div>
+                    <a href="/addSourceRainbow" class="nav-item active">
+                        <div class="nav-icon">
+                            <svg class="icon" viewBox="0 0 24 24">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </div>
+                        <span>Add Source</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="top-nav">
+                <div class="breadcrumb">
+                    <span>InvoiceIQ</span>
+                    <span>/</span>
+                    <span>Data Sources</span>
+                    <span>/</span>
+                    <span>Add Source</span>
+                </div>
+
+                <div class="top-nav-right">
+                    <input type="text" class="search-input" placeholder="Search data sources...">
+                </div>
+            </header>
+
+            <div class="page-content">
+                <section class="containerData">
+                    <div class="page-header">
+                        <h1>Add Data Source</h1>
+                        <p>Connect external services to track and visualize your personal metrics</p>
+                    </div>
+                    <form class="theme-button" action="/addSource">
+                        <button class="btn-secondary">Switch Themes!</button>
+                    </form>
+                </section>
+
+                <div id="successAlert" class="alert alert-success">
+                    Data source connected successfully!
+                </div>
+
+                <div id="manualEntryAlert" class="alert alert-success">
+                    Manual data entry added successfully!
+                </div>
+
+                <!-- Manual Entry Section -->
+                <div class="chart-panel rainbow-border-static" style="margin-bottom: 3rem;">
+                    <div class="panel-header">
+                        <h3 class="panel-title">Quick Manual Entry</h3>
+                        <!-- <h3 class="panel-title">✏️ Quick Manual Entry</h3> -->
+                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Add data points
+                            manually without connecting an API</p>
+                    </div>
+
+                    <form id="manualEntryForm" onsubmit="handleManualEntry(event)" action="/post/addSource"
+                        method="POST">
+                        <div
+                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1rem; margin-bottom: 1rem;">
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="category">Category</label>
+                                <select name="category" id="metricCategory" class="form-select special" required>
+                                    <option value="">Select category...</option>
+                                    <!-- <option value="finance">💰 Finance</option>
+                                    <option value="fitness">🏃 Fitness</option>
+                                    <option value="productivity">💻 Productivity</option>
+                                    <option value="health">❤️ Health</option>
+                                    <option value="mood">😊 Mood</option>
+                                    <option value="sleep">😴 Sleep</option>
+                                    <option value="custom">🔧 Custom</option> -->
+                                    <option value="finance">Finance</option>
+                                    <option value="fitness">Fitness</option>
+                                    <option value="productivity">Productivity</option>
+                                    <option value="health">Health</option>
+                                    <option value="mood">Mood</option>
+                                    <option value="sleep">Sleep</option>
+                                    <option value="custom">Custom</option>
+                                </select>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="name">Metric Name</label>
+                                <input name="name" type="text" id="metricName" class="form-input"
+                                    placeholder="e.g., Coffee Purchase" required>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="metricValue">Value</label>
+                                <input name="value" type="number" step="0.01" id="metricValue" class="form-input"
+                                    placeholder="e.g., 5.50" required>
+                            </div>
+
+                            <div class="form-group" style="margin-bottom: 0;">
+                                <label class="form-label" for="metricDate">Date</label>
+                                <input name="date" type="date" id="metricDate" class="form-input" required>
+                            </div>
+                        </div>
+
+                        <div class="form-group" style="margin-bottom: 1rem;">
+                            <label class="form-label" for="metricNotes">Notes (Optional)</label>
+                            <input name="notes" type="text" id="metricNotes" class="form-input"
+                                placeholder="Add a note about this entry...">
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">Add Entry</button>
+                    </form>
+                </div>
+
+                <div class="info-box rainbow-border-static">
+                    <h3>Popular Integrations</h3>
+                    <ul>
+                        <li>Fitness trackers sync your activity, heart rate, and sleep data</li>
+                        <li>Productivity tools monitor your work hours and focus time</li>
+                        <li>Finance APIs track spending patterns and savings goals</li>
+                        <li>Custom APIs let you bring in any data via REST endpoints</li>
+                    </ul>
+                </div>
+
+                <!-- Source Cards Grid -->
+                <div class="source-grid">
+                    <div class="source-card rainbow-border" onclick="openModal('fitbit')">
+                        <!-- <div class="source-icon">🏃</div> -->
+                        <h3>Fitbit</h3>
+                        <p>Track steps, heart rate, calories, and sleep quality from your Fitbit device.</p>
+                        <span class="badge badge-popular">Popular</span>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('strava')">
+                        <!-- <div class="source-icon">🚴</div> -->
+                        <h3>Strava</h3>
+                        <p>Import running and cycling activities, routes, and performance metrics.</p>
+                        <span class="badge badge-popular">Popular</span>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('github')">
+                        <!-- <div class="source-icon">💻</div> -->
+                        <h3>GitHub</h3>
+                        <p>Monitor your coding activity, commits, pull requests, and contributions.</p>
+                        <span class="badge badge-new">New</span>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('googlesheets')">
+                        <!-- <div class="source-icon">📋</div> -->
+                        <h3>Google Sheets</h3>
+                        <p>Pull data from spreadsheets for custom tracking and visualization.</p>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('todoist')">
+                        <!-- <div class="source-icon">✅</div> -->
+                        <h3>Todoist</h3>
+                        <p>Track task completion rates, productivity streaks, and project progress.</p>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('spotify')">
+                        <!-- <div class="source-icon">🎵</div> -->
+                        <h3>Spotify</h3>
+                        <p>Analyze listening habits, favorite genres, and music discovery trends.</p>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('rescuetime')">
+                        <!-- <div class="source-icon">⏰</div> -->
+                        <h3>RescueTime</h3>
+                        <p>Monitor screen time, app usage, and productivity scores automatically.</p>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('myfitnesspal')">
+                        <!-- <div class="source-icon">🍎</div> -->
+                        <h3>MyFitnessPal</h3>
+                        <p>Track nutrition, calorie intake, macros, and meal logging data.</p>
+                    </div>
+
+                    <div class="source-card rainbow-border" onclick="openModal('custom')">
+                        <!-- <div class="source-icon">🔧</div> -->
+                        <h3>Custom API</h3>
+                        <p>Connect any REST API endpoint to import custom data sources.</p>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="configModal" class="modal">
+        <div class="modal-content rainbow-border-static">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Configure Data Source</h2>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+
+            <form id="sourceForm" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label class="form-label" for="sourceName">Connection Name</label>
+                    <input type="text" id="sourceName" class="form-input" placeholder="My Fitbit Data" required>
+                    <div class="form-help">Give this connection a memorable name</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="apiKey">API Key / Token</label>
+                    <input type="password" id="apiKey" class="form-input" placeholder="Enter your API key" required>
+                    <div class="form-help">Your credentials are encrypted and stored securely</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="refreshRate">Data Refresh Rate</label>
+                    <select id="refreshRate" class="form-select">
+                        <option value="5">Every 5 minutes</option>
+                        <option value="15" selected>Every 15 minutes</option>
+                        <option value="30">Every 30 minutes</option>
+                        <option value="60">Every hour</option>
+                        <option value="1440">Once per day</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="dataTypes">Data to Sync</label>
+                    <div style="display: flex; flex-direction: column; gap: 0.75rem; margin-top: 0.5rem;">
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="steps" checked>
+                            <label for="steps">Daily Steps</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="heartrate" checked>
+                            <label for="heartrate">Heart Rate</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="sleep" checked>
+                            <label for="sleep">Sleep Data</label>
+                        </div>
+                        <div class="checkbox-group">
+                            <input type="checkbox" id="calories">
+                            <label for="calories">Calories Burned</label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="manualData">Manual Data Entry (Optional)</label>
+                    <textarea id="manualData" class="form-textarea" placeholder='Enter custom data points in JSON format:
+[
+  {"date": "2024-10-27", "value": 8500, "metric": "steps"},
+  {"date": "2024-10-26", "value": 7200, "metric": "steps"}
+]'></textarea>
+                    <div class="form-help">Add custom data points manually in JSON format for one-time imports</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="notes">Notes (Optional)</label>
+                    <textarea id="notes" class="form-textarea"
+                        placeholder="Add any additional notes about this connection..."></textarea>
+                </div>
+
+                <div class="btn-group">
+                    <button type="submit" class="btn btn-primary">Connect Source</button>
+                    <button type="button" class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <script src="addSource.js"></script>
+</body>
+
+</html>
