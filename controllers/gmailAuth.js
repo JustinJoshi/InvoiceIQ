@@ -8,7 +8,8 @@ const path = require('path');
 const { authenticate } = require('@google-cloud/local-auth');
 const { google } = require('googleapis');
 const Anthropic = require('@anthropic-ai/sdk')
-const { toFile } = require('@anthropic-ai/sdk')
+const { toFile } = require('@anthropic-ai/sdk');
+const Invoice = require("../models/Invoice");
 
 
 module.exports = {
@@ -176,9 +177,14 @@ module.exports = {
             // The data is Base64 URL-safe encoded
             const fileData = res.data.data;
             const buffer = Buffer.from(fileData, 'base64');
-    
+     
             const savePath = path.join(process.cwd(), 'downloads', filename);
             await fs.writeFile(savePath, buffer);
+
+            await Invoice.create({
+                    file: fileData,
+                    user: req.user.id,
+                  });
     
             console.log(`  ✅ Successfully downloaded PDF: ${filename} to ${savePath}`);
         } catch (err) {
