@@ -11,6 +11,8 @@ router.post("/createPost", upload.single("file"), postsController.createPost);
 
 router.post("/addSource", ensureAuth, postsController.addSource)
 
+router.post("/createManualInvoice", upload.array("file", 25), postsController.createManualInvoice)
+
 router.put("/likePost/:id", postsController.likePost);
 
 router.delete("/deletePost/:id", postsController.deletePost);

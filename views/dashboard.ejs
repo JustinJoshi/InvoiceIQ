@@ -655,9 +655,9 @@
                         <div class="dashboard-actions">
                             <!-- <button class="btn-icon">🔄</button> -->
 
-                            <form class="rainbow-border" action="/dashboardRainbow">
+                            <!-- <form class="rainbow-border" action="/dashboardRainbow">
                                 <button class="btn-secondary">Switch Themes!</button>
-                            </form>
+                            </form> -->
 
                             <!-- <button class="btn-secondary">⏱️ Last 7 days</button>
                             <button class="btn-primary">➕ Add Panel</button> -->
@@ -671,10 +671,23 @@
 
                 <!-- Stats Grid -->
                 <div class="dashboard-grid">
-                    <div class="stat-card">
+                    <% for (const [i, item] of aiResponse.items.entries()){ %>
+                        <div class="stat-card" id=<%=`${ i}`%>>
+                        <div class="stat-header" id=<%=`${ i}`%>>
+                            <span class="stat-title" id=<%=`${ i}`%>><%= item.description %></span>
+                            <span id=<%=`${ i}`%>><%= i %></span>
+                        </div>
+                        <div id=<%=`${ i}`%> class="stat-value"> <%= item.unit_price %> </div>
+                        <div id=<%=`${ i}`%> class="stat-change positive">
+                            <span id=<%=`${ i}`%>>↑</span>
+                            <span id=<%=`${ i}`%>>12% from last week</span>
+                        </div>
+                    </div>
+                    <% } %>
+                    <!-- <div class="stat-card">
                         <div class="stat-header">
                             <span class="stat-title">Daily Steps</span>
-                            <!-- <div class="stat-icon blue">👟</div> -->
+                            <div class="stat-icon blue">👟</div>
                         </div>
                         <div class="stat-value">8,247</div>
                         <div class="stat-change positive">
@@ -686,7 +699,7 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <span class="stat-title">Active Hours</span>
-                            <!-- <div class="stat-icon green">⏱️</div> -->
+                            <div class="stat-icon green">⏱️</div>
                         </div>
                         <div class="stat-value">6.5h</div>
                         <div class="stat-change positive">
@@ -698,7 +711,7 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <span class="stat-title">Calories Burned</span>
-                            <!-- <div class="stat-icon orange">🔥</div> -->
+                            <div class="stat-icon orange">🔥</div>
                         </div>
                         <div class="stat-value">2,145</div>
                         <div class="stat-change negative">
@@ -710,14 +723,14 @@
                     <div class="stat-card">
                         <div class="stat-header">
                             <span class="stat-title">Sleep Quality</span>
-                            <!-- <div class="stat-icon purple">😴</div> -->
+                            <div class="stat-icon purple">😴</div>
                         </div>
                         <div class="stat-value">87%</div>
                         <div class="stat-change positive">
                             <span>↑</span>
                             <span>5% from last week</span>
                         </div>
-                    </div>
+                    </div> -->
                 </div>
 
                 <!-- Chart Panel -->

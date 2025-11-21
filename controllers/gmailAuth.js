@@ -7,7 +7,7 @@ const fs = require('fs').promises;
 const path = require('path');
 const { authenticate } = require('@google-cloud/local-auth');
 const { google } = require('googleapis');
-const Anthropic = require('@anthropic-ai/sdk')
+const Anthropic = require('@anthropic-ai/sdk');
 const { toFile } = require('@anthropic-ai/sdk');
 const Invoice = require("../models/Invoice");
 
@@ -183,6 +183,7 @@ module.exports = {
 
             await Invoice.create({
                     file: fileData,
+                    isManual: false,
                     user: req.user.id,
                   });
     

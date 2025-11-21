@@ -578,6 +578,124 @@
             padding: 1.5rem;
         }
 
+        /* drag */
+        .drop-zone {
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            padding: 25px;
+            text-align: center;
+            font-family: Arial, sans-serif;
+            color: #555;
+            cursor: pointer;
+            transition:
+                border-color 0.3s ease,
+                background-color 0.3s ease;
+            background: #f8f9fa;
+        }
+
+        .drop-zone.drag-over {
+            border-color: #2196f3;
+            /* Blue border when dragging over */
+            background-color: #e3f2fd;
+            /* Light blue background */
+        }
+
+        .drop-zone:focus {
+            outline: 2px solid #2196f3;
+            outline-offset: 2px;
+        }
+
+        #file-preview {
+            margin-top: 15px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .file-item {
+            width: 120px;
+            padding: 8px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            font-size: 12px;
+            word-break: break-all;
+        }
+
+        .file-item img {
+            max-width: 100px;
+            max-height: 80px;
+            margin-bottom: 5px;
+            object-fit: cover;
+        }
+
+        .file-extension {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 80px;
+            height: 80px;
+            background: #f1f1f1;
+            color: #333;
+            font-size: 18px;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 5px;
+        }
+
+        .file-name {
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .file-size {
+            color: #777;
+        }
+
+        #upload-progress {
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .status-message {
+            margin-top: 10px;
+            font-weight: bold;
+        }
+
+        .status-message.success {
+            color: #2e7d32;
+            /* Green for success */
+        }
+
+        .status-message.error {
+            color: #c62828;
+            /* Red for error */
+        }
+
+        #upload-button {
+            margin-top: 15px;
+            padding: 10px 15px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        #upload-button:disabled {
+            background-color: #ccc;
+            cursor: not-allowed;
+        }
+
+        #upload-button:hover:not(:disabled) {
+            background-color: #0056b3;
+        }
+
+
         /* Responsive */
         @media (max-width: 1024px) {
             .sidebar {
@@ -713,10 +831,34 @@
                     <div class="page-header">
                         <h1>Add Data Source</h1>
                         <p>Connect external services to track and visualize your personal metrics</p>
+                        <!-- <form id="upload-form" method="POST" action="/post/createManualInvoice" enctype="multipart/form-data">
+                            <input type="file" id="file-input" multiple hidden />
+                            <div id="drop-zone" class="drop-zone" tabindex="0">Drop files here or click to browse</div>
+                            <div id="file-preview"></div>
+                            <progress id="upload-progress" value="0" max="100" hidden></progress>
+                            <p id="upload-status" class="status-message" aria-live="polite"></p>
+                            <button type="submit" id="upload-button" disabled>Upload Files</button>
+                        </form> -->
+                        <form action="/post/createManualInvoice" enctype="multipart/form-data" method="POST">
+                            <div class="mb-3">
+                                <label for="title" class="form-label">Title</label>
+                                <input type="text" class="form-control" id="title" name="title">
+                            </div>
+                            <div class="mb-3">
+                                <label for="caption" class="form-label">Caption</label>
+                                <textarea class="form-control" id="caption" name="caption"></textarea>
+                            </div>
+                            <div class="mb-3">
+                                <label for="imgUpload" class="form-label">Image</label>
+                                <input type="file" class="form-control" id="imageUpload" multiple name="file">
+                            </div>
+                            <button type="submit" class="btn btn-primary" value="Upload">Submit</button>
+                        </form>
+
                     </div>
-                    <form class="rainbow-border form1" action="/addSourceRainbow">
+                    <!-- <form class="rainbow-border form1" action="/addSourceRainbow">
                         <button class="btn-secondary">Switch Themes!</button>
-                    </form>
+                    </form> -->
                 </section>
                 <!-- <div id="successAlert" class="alert alert-success">
                     ✅ Data source connected successfully!
@@ -949,7 +1091,7 @@
             </form>
         </div>
     </div>
-    <script src="addSource.js"></script>
+    <script src="main.js"></script>
 </body>
 
 </html>

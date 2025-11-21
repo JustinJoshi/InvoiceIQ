@@ -1,7 +1,13 @@
 const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
-const Chart = require("../models/Chart")
+const Chart = require("../models/Chart");
 const pdf2json = require("../middleware/pdf2json");
+const Invoice = require("../models/Invoice");
+
+const Anthropic = require('@anthropic-ai/sdk');
+const fs = require('fs').promises;
+const { toFile } = require('@anthropic-ai/sdk');
+
 require("dotenv").config({ path: "./config/.env" });
 
 module.exports = {
@@ -55,7 +61,9 @@ module.exports = {
   getProfile: async (req, res) => {
     try {
       const posts = await Post.find({ user: req.user.id });
-      res.render("dashboard.ejs", { posts: posts, user: req.user });
+      const userCharts = await Invoice.find({ user: req.user.id })
+      const aiResponse = userCharts[0].aiResponse
+      res.render("dashboard.ejs", { posts: posts, user: req.user, userCharts: userCharts, aiResponse: aiResponse });
     } catch (err) {
       console.log(err);
     }
@@ -90,6 +98,145 @@ module.exports = {
       res.render("post.ejs", { post: post, user: req.user });
     } catch (err) {
       console.log(err);
+    }
+  },
+  createManualInvoice: async (req, res) => {
+    try {
+      let files = []
+      req.files.forEach((e, i) => {
+        files.push(e.path)
+      })
+
+      console.log(files)
+
+      for (const pdf of files) {
+        const result = await cloudinary.uploader.upload(pdf);
+        console.log('File uploaded to cloudinary')
+
+
+        const invoiceTemplate = {
+          "_id": "",
+          "invoice_number": "",
+          "invoice_date": "",
+          "due_date": "",
+          "vendor": {
+            "name": "",
+            "address": "",
+            "phone": "",
+            "email": ""
+          },
+          "recipient": {
+            "name": "",
+            "address": "",
+            "phone": ""
+          },
+          "items": [
+            {
+              "description": "",
+              "quantity": 0,
+              "unit_price": 0,
+              "total": 0
+            }
+          ],
+          "subtotal": 0,
+          "tax_rate": 0,
+          "tax_amount": 0,
+          "total": 0,
+          "currency": "USD",
+          "payment_terms": "",
+          "status": "pending"
+        };
+
+        async function fileRead() {
+          const anthropic = new Anthropic({
+            apiKey: process.env.API_KEY_CLAUDE
+          });
+
+          try {
+
+            const fileBuffer = await fs.readFile(pdf);
+            console.log('File read successfully, size:', fileBuffer.length, 'bytes');
+
+
+            console.log('Uploading to Claude Files API...');
+            const fileUpload = await anthropic.beta.files.upload({
+              file: await toFile(fileBuffer, 'invoice.pdf', { type: 'application/pdf' })
+            }, {
+              betas: ['files-api-2025-04-14']
+            });
+
+            console.log('File uploaded successfully, ID:', fileUpload.id);
+
+
+            const response = await anthropic.beta.messages.create({
+              model: "claude-sonnet-4-5",
+              max_tokens: 4096,
+              messages: [
+                {
+                  role: "user",
+                  content: [
+                    {
+                      type: "text",
+                      text: `Please extract the invoice data from the attached PDF and return it as a JSON object in the following format. Make sure to fill in all the fields with the actual data from the invoice:
+
+${JSON.stringify(invoiceTemplate, null, 2)}
+
+Return ONLY the JSON object, with no additional text or markdown formatting.
+
+If there are multiple items, fill them into the array following the format.`
+                    },
+                    {
+                      type: "document",
+                      source: {
+                        type: "file",
+                        file_id: fileUpload.id
+                      }
+                    }
+                  ]
+                }
+              ],
+              betas: ["files-api-2025-04-14"],
+            });
+
+            console.log('Claude Response:', response);
+
+
+            const jsonText = response.content[0].text;
+            console.log('Raw JSON text:', jsonText);
+
+
+            const cleanJson = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
+
+            if(!JSON.parse(cleanJson)) throw error
+
+            const invoiceData = JSON.parse(cleanJson);
+
+            await Invoice.create({
+              file: result.secure_url,
+              aiResponse: invoiceData,
+              isManualEntry: true,
+              user: req.user.id,
+            });
+            console.log('Invoice created in DB. Uploaded cloudinary ID as file')
+
+            console.log('Successfully parsed invoice data:', invoiceData);
+
+
+
+          } catch (error) {
+            console.error('Error processing invoice with Claude:', error);
+            throw error;
+          }
+        }
+
+        await fileRead();
+      }
+
+      console.log("Manual upload complete!");
+      res.redirect("/addSource");
+    } catch (err) {
+      console.log(err);
+      res.status(500).send("Error processing invoices");
     }
   },
   createPost: async (req, res) => {

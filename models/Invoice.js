@@ -4,6 +4,13 @@ const invoiceSchema = new mongoose.Schema({
   file: {
 
   },
+  aiResponse: {
+
+  },
+  isManualEntry: {
+    type: Boolean,
+    required: true,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
@@ -14,4 +21,4 @@ const invoiceSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Invoice", chartSchema);
+module.exports = mongoose.model("Invoice", invoiceSchema);
