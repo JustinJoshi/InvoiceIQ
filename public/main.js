@@ -10,36 +10,38 @@ async function makeChart(e) {
       throw new Error(`Response status: ${response.status}`);
     }
     const result = await response.json()
-
     console.log(result)
 
     const targetId = e.originalTarget.id
     console.log('ID', e.originalTarget.id)
 
+    let prices = []
+    let purchaseDate = []
+    result.forEach((e, i) => {
+      prices.push(e.aiResponse.items[+targetId].unit_price)
+      purchaseDate.push(e.aiResponse.invoice_date)
+    })
+
+    console.log('AFTER LOOP', prices, "PURCHASE DATE", purchaseDate)
+
     document.getElementById(`${targetId}`)
-    if(!targetId) return
+    if (!targetId) return
 
     const charts = result.charts
 
-    //create chart variables
-    let value = []
-    let lables = []
+    itemName = result[0].aiResponse.items[+targetId].description
+    console.log(itemName)
 
-    result.charts.forEach((e, i) => {
-      value.push(result.charts[i].value)
-      lables.push(result.charts[i].date)
-    })
-
-    category = charts[0].category
+    
 
     //create chart
-    new Chart(ctx, {
+    let newChart = new Chart(ctx, {
       type: 'line',
       data: {
-        labels: lables,
+        labels: prices,
         datasets: [{
-          label: category,
-          data: value,
+          label: itemName,
+          data: purchaseDate,
           borderColor: '#5794f2',
           backgroundColor: 'rgba(87, 148, 242, 0.1)',
           tension: 0.4,
@@ -66,28 +68,27 @@ async function makeChart(e) {
       }
     });
 
-    console.log(charts[0].date, "charts")
 
-   
+
     //make list of data points
-    charts.forEach((e, i) => {
-      console.log(charts[i])
-      document.querySelector('#tbody').innerHTML += `
-                            <tr>
-                                <td>${charts[i].category}</td>
-                                <td>${charts[i].name}</td>
-                                <td>${charts[i].value}</td>
-                                <td>${charts[i].date}</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                            </tr>`
-    })
+    // charts.forEach((e, i) => {
+    //   console.log(charts[i])
+    //   document.querySelector('#tbody').innerHTML += `
+    //                         <tr>
+    //                             <td>${charts[i].category}</td>
+    //                             <td>${charts[i].name}</td>
+    //                             <td>${charts[i].value}</td>
+    //                             <td>${charts[i].date}</td>
+    //                             <td><span class="badge badge-success">Completed</span></td>
+    //                         </tr>`
+    // })
 
   } catch (error) {
     console.error(error.message);
   }
 }
 
-// //drag 
+// //drag
 // const dropZone = document.getElementById('drop-zone')
 // const fileInput = document.getElementById('file-input')
 // const uploadBtn = document.getElementById('upload-button')
