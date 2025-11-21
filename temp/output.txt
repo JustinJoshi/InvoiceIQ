@@ -1,5 +1,0 @@
-name: avacados price: $21 quantity: 21 date purchased: 7/2/25
-date entered:
-ID: Schema.Types.ObjectID
-1
-----------------Page (0) Break----------------
