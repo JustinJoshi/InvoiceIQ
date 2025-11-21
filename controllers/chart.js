@@ -2,7 +2,8 @@ const cloudinary = require("../middleware/cloudinary");
 const Post = require("../models/Post");
 const Chart = require("../models/Chart")
 const pdf2json = require("../middleware/pdf2json");
-const Invoice = require("../models/Invoice")
+const Invoice = require("../models/Invoice");
+const { json } = require("stream/consumers");
 require("dotenv").config({ path: "./config/.env" });
 
 module.exports = {
@@ -22,6 +23,7 @@ module.exports = {
       })
 
       console.log(userCharts)
+      res.send(JSON.stringify(userCharts))
       // let freq = {}
       // let touched = []
       // items.forEach(((e) => {
