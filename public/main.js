@@ -1,6 +1,11 @@
 const ctx = document.getElementById('activityChart');
 
+let hasChart = false
+
+console.log('BEFORE', ctx.style)
 document.querySelector('.dashboard-grid').addEventListener('click', makeChart)
+
+let newChart
 
 async function makeChart(e) {
   const url = "/makeChart";
@@ -32,16 +37,15 @@ async function makeChart(e) {
     itemName = result[0].aiResponse.items[+targetId].description
     console.log(itemName)
 
-    
-
+    if(hasChart) newChart.destroy()
     //create chart
-    let newChart = new Chart(ctx, {
-      type: 'line',
+    newChart = new Chart(ctx, {
+      type: 'bar',
       data: {
-        labels: prices,
+        labels: purchaseDate,
         datasets: [{
           label: itemName,
-          data: purchaseDate,
+          data: prices,
           borderColor: '#5794f2',
           backgroundColor: 'rgba(87, 148, 242, 0.1)',
           tension: 0.4,
@@ -66,27 +70,15 @@ async function makeChart(e) {
           }
         }
       }
-    });
-
-
-
-    //make list of data points
-    // charts.forEach((e, i) => {
-    //   console.log(charts[i])
-    //   document.querySelector('#tbody').innerHTML += `
-    //                         <tr>
-    //                             <td>${charts[i].category}</td>
-    //                             <td>${charts[i].name}</td>
-    //                             <td>${charts[i].value}</td>
-    //                             <td>${charts[i].date}</td>
-    //                             <td><span class="badge badge-success">Completed</span></td>
-    //                         </tr>`
-    // })
-
+    })
+    hasChart = true
+    ;
   } catch (error) {
     console.error(error.message);
   }
 }
+
+
 
 // //drag
 // const dropZone = document.getElementById('drop-zone')
