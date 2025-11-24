@@ -60,10 +60,16 @@ module.exports = {
   },
   getProfile: async (req, res) => {
     try {
-      const posts = await Post.find({ user: req.user.id });
       const userCharts = await Invoice.find({ user: req.user.id })
-      const aiResponse = userCharts[0].aiResponse
-      res.render("dashboard.ejs", { posts: posts, user: req.user, userCharts: userCharts, aiResponse: aiResponse });
+      if (!userCharts[0]) {
+        console.log(`userCharts is ${typeof userCharts[0]}, rendering without loading dashboard data.`);
+        res.render("dashboard.ejs")
+      } else {
+        console.log('hi')
+        const aiResponse = userCharts[0].aiResponse
+        console.log(userCharts, aiResponse)
+        res.render("dashboard.ejs", { user: req.user, userCharts: userCharts, aiResponse: aiResponse });
+      }
     } catch (err) {
       console.log(err);
     }
@@ -207,7 +213,7 @@ If there are multiple items, fill them into the array following the format.`
 
             const cleanJson = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
-            if(!JSON.parse(cleanJson)) throw error
+            if (!JSON.parse(cleanJson)) throw error
 
             const invoiceData = JSON.parse(cleanJson);
 

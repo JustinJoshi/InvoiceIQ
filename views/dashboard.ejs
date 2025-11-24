@@ -57,6 +57,16 @@
             box-sizing: border-box;
         }
 
+        a:visited{
+            color: white;
+            
+        }
+
+        .invCont{
+            display: flex;
+            justify-content: space-around;
+        }
+
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: var(--background);
@@ -588,42 +598,16 @@
                 <div class="nav-section">
                     <div class="nav-section-title">Main</div>
                     <a href="/dashboard" class="nav-item active">
-                        <!-- <span>🏠</span> -->
                         <span>Dashboard</span>
                     </a>
-                    <!-- <a href="#" class="nav-item">
-                        <span>📈</span>
-                        <span>Metrics</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <span>📊</span>
-                        <span>Analytics</span>
-                    </a> -->
                 </div>
 
                 <div class="nav-section">
                     <div class="nav-section-title">Data Sources</div>
-                    <!-- <a href="#" class="nav-item">
-                        <span>🔌</span>
-                        <span>Connections</span>
-                    </a> -->
                     <a href="/addSource" class="nav-item">
-                        <!-- <span>➕</span> -->
                         <span>Add Source</span>
                     </a>
                 </div>
-
-                <!-- <div class="nav-section">
-                    <div class="nav-section-title">Settings</div>
-                    <a href="#" class="nav-item">
-                        <span>🔔</span>
-                        <span>Alerts</span>
-                    </a>
-                    <a href="#" class="nav-item">
-                        <span>⚙️</span>
-                        <span>Settings</span>
-                    </a>
-                </div> -->
             </nav>
         </aside>
 
@@ -637,11 +621,6 @@
                 </div>
 
                 <div class="top-nav-right">
-                    <!-- <input type="text" class="search-input" placeholder="Search metrics..."> -->
-                    <!-- <div class="user-menu">
-                        <div class="user-avatar"></div>
-                        <span>Alex Chen</span>
-                    </div> -->
                 </div>
             </header>
 
@@ -653,99 +632,52 @@
                             <p style="color: var(--text-secondary);">Monitor your personal metrics in real-time</p>
                         </div>
                         <div class="dashboard-actions">
-                            <!-- <button class="btn-icon">🔄</button> -->
-
-                            <!-- <form class="rainbow-border" action="/dashboardRainbow">
-                                <button class="btn-secondary">Switch Themes!</button>
-                            </form> -->
-
-                            <!-- <button class="btn-secondary">⏱️ Last 7 days</button>
-                            <button class="btn-primary">➕ Add Panel</button> -->
-                            <!-- <form action="/makeChart">
-                                <button>Make Chart</button>
-                            </form> -->
-
+                            <select name="chartType" id="chartType">
+                                <option value="total">Total</option>
+                                <option value="unit">Unit Price</option>
+                            </select>
                         </div>
                     </div>
                 </div>
 
                 <!-- Stats Grid -->
                 <div class="dashboard-grid">
+                    <% console.log(typeof aiResponse == undefined, typeof aiResponse) %>
+                    <% if(typeof aiResponse === 'undefined'){ %>
+                     <%   console.log(`aiResponse is ${typeof aiResponse}, loading dashboard without data`) %>
+                    <% }else{ %>
                     <% for (const [i, item] of aiResponse.items.entries()){ %>
                         <div class="stat-card" id=<%=`${ i}`%>>
                         <div class="stat-header" id=<%=`${ i}`%>>
                             <span class="stat-title" id=<%=`${ i}`%>><%= item.description %></span>
-                            <span id=<%=`${ i}`%>><%= i %></span>
                         </div>
                         <div id=<%=`${ i}`%> class="stat-value"> <%= item.unit_price %> </div>
                         <div id=<%=`${ i}`%> class="stat-change positive">
-                            <span id=<%=`${ i}`%>>↑</span>
+                            <% if(userCharts[userCharts.length - 2].aiResponse.items[i].unit_price < userCharts[userCharts.length - 1].aiResponse.items[i].unit_price ) { %>
+                                <span id=<%=`${ i}`%>>🡵</span>
+                            <% }else { %>
+                                <span id=<%=`${ i}`%>>🡶</span>
+                            <% } %>
+
+                            <% console.log('LAST', userCharts[userCharts.length - 1].aiResponse.items[i], "PREVIOUS", userCharts[userCharts.length - 2].aiResponse.items[i]) %>
+                            
                             <span id=<%=`${ i}`%>>12% from last week</span>
                         </div>
                     </div>
                     <% } %>
+                <% } %>
                 </div>
 
                 <!-- Chart Panel -->
                 <div class="chart-panel">
                     <div class="panel-header">
                         <h3 class="panel-title">Activity Trends</h3>
-                        <!-- <div class="time-range-selector">
-                            <button class="time-range-btn">24h</button>
-                            <button class="time-range-btn active">7d</button>
-                            <button class="time-range-btn">30d</button>
-                            <button class="time-range-btn">90d</button>
-                        </div> -->
                     </div>
                     <div class="chart-container">
                         <canvas id="activityChart"></canvas>
                     </div>
                 </div>
-
-                <!-- Activity Table -->
-                <div class="data-table">
-                    <table class="table">
-                        <thead>
-                            <tr>
-                                <th>Category</th>
-                                <th>Name</th>
-                                <th>Value</th>
-                                <th>Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody id="tbody">
-                            <!-- <tr>
-                                <td>Oct 26, 2024</td>
-                                <td>Morning Run</td>
-                                <td>45 min</td>
-                                <td>425 kcal</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Oct 25, 2024</td>
-                                <td>Cycling</td>
-                                <td>60 min</td>
-                                <td>520 kcal</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Oct 24, 2024</td>
-                                <td>Yoga</td>
-                                <td>30 min</td>
-                                <td>180 kcal</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                            </tr>
-                            <tr>
-                                <td>Oct 23, 2024</td>
-                                <td>Weight Training</td>
-                                <td>50 min</td>
-                                <td>310 kcal</td>
-                                <td><span class="badge badge-success">Completed</span></td>
-                            </tr> -->
-                        </tbody>
-                    </table>
-                </div>
+                <div class="stat-card" id="invoice"></div>
             </div>
         </main>
     </div>

@@ -1,11 +1,11 @@
 const ctx = document.getElementById('activityChart');
 
-let hasChart = false
+let hasChart = false;
+let newChart;
 
-console.log('BEFORE', ctx.style)
-document.querySelector('.dashboard-grid').addEventListener('click', makeChart)
+document.querySelector('.dashboard-grid').addEventListener('click', makeChart);
 
-let newChart
+
 
 async function makeChart(e) {
   const url = "/makeChart";
@@ -14,30 +14,37 @@ async function makeChart(e) {
     if (!response.ok) {
       throw new Error(`Response status: ${response.status}`);
     }
-    const result = await response.json()
-    console.log(result)
+    const result = await response.json();
+    const targetId = e.originalTarget.id;
 
-    const targetId = e.originalTarget.id
-    console.log('ID', e.originalTarget.id)
+    const dataType = document.querySelector("#chartType").value;
 
-    let prices = []
-    let purchaseDate = []
-    result.forEach((e, i) => {
-      prices.push(e.aiResponse.items[+targetId].unit_price)
-      purchaseDate.push(e.aiResponse.invoice_date)
-    })
+    let prices = [];
+    let purchaseDate = [];
 
-    console.log('AFTER LOOP', prices, "PURCHASE DATE", purchaseDate)
 
-    document.getElementById(`${targetId}`)
-    if (!targetId) return
+    if (dataType === 'unit') {
+      result.forEach((e, i) => {
+        prices.push(e.aiResponse.items[+targetId].unit_price)
+        purchaseDate.push(e.aiResponse.invoice_date)
+      });
+    } else if (dataType === 'total') {
+      result.forEach((e, i) => {
+        prices.push(e.aiResponse.items[+targetId].total)
+        purchaseDate.push(e.aiResponse.invoice_date)
+      });
+    }
+
+
+    document.getElementById(`${targetId}`);
+    if (!targetId) return;
 
     const charts = result.charts
 
     itemName = result[0].aiResponse.items[+targetId].description
     console.log(itemName)
 
-    if(hasChart) newChart.destroy()
+    if (hasChart) newChart.destroy()
     //create chart
     newChart = new Chart(ctx, {
       type: 'bar',
@@ -47,7 +54,7 @@ async function makeChart(e) {
           label: itemName,
           data: prices,
           borderColor: '#5794f2',
-          backgroundColor: 'rgba(87, 148, 242, 0.1)',
+          backgroundColor: 'rgba(87, 149, 242, 0.97)',
           tension: 0.4,
           fill: true
         }]
@@ -68,11 +75,42 @@ async function makeChart(e) {
             grid: { display: false },
             ticks: { color: '#9fa3af' }
           }
+        },
+        onClick: (event, activeElements) => {
+          if (activeElements.length > 0) {
+            const element = activeElements[0];
+            const datasetIndex = element.datasetIndex;
+            const index = element.index;
+
+            const label = newChart.data.labels[index];
+            const value = newChart.data.datasets[datasetIndex].data[index];
+
+            const invoice = result[index].file
+
+            document.querySelector('#invoice').innerHTML = `
+            <section class="invCont">
+              <div>
+                <a href=${invoice} target="_blank">View Invoice</a>
+              </div>
+              <div>
+                <form action="/createNote" method="POST">
+                  <input type="text">
+                  <button type="submit">Create Note</button>
+                </form>
+                <div id="notes"></div>
+              </div>
+            </section>
+            `
+
+            
+
+            console.log(`Clicked: ${label}, Value: ${value}`);
+          }
         }
       }
     })
-    hasChart = true
-    ;
+
+    hasChart = true;
   } catch (error) {
     console.error(error.message);
   }

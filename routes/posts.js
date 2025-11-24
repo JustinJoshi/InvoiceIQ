@@ -9,7 +9,9 @@ router.get("/:id", ensureAuth, postsController.getPost);
 
 router.post("/createPost", upload.single("file"), postsController.createPost);
 
-router.post("/addSource", ensureAuth, postsController.addSource)
+router.post("/addSource", ensureAuth, postsController.addSource);
+
+// router.post("/createNote", ensureAuth, postsController.creteNote)
 
 router.post("/createManualInvoice", upload.array("file", 25), postsController.createManualInvoice)
 
