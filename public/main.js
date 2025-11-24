@@ -106,7 +106,12 @@ async function makeChart(e) {
             </div>
             `
 
-            document.querySelector('#notesList').innerHTML = `<div>${result[index].note}</div>`
+            if (result[index].note === undefined) {
+              document.querySelector('#notesList').innerHTML = ''
+            } else {
+              document.querySelector('#notesList').innerHTML = `<div>${result[index].note}</div>`
+
+            }
 
             console.log(`Clicked: ${label}, Value: ${value}`);
           }
