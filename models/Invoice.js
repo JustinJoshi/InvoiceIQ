@@ -7,6 +7,9 @@ const invoiceSchema = new mongoose.Schema({
   aiResponse: {
 
   },
+  note: {
+
+  },
   isManualEntry: {
     type: Boolean,
     required: true,

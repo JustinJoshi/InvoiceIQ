@@ -245,6 +245,25 @@ If there are multiple items, fill them into the array following the format.`
       res.status(500).send("Error processing invoices");
     }
   },
+  createNote: async (req, res) => {
+    try {
+      const index = req.params.index;
+      const note = req.body.note;
+
+      const userCharts = await Invoice.find({ user: req.user.id})
+      const invoice = userCharts[index]
+
+      console.log(index)
+
+      await Invoice.findOneAndUpdate({ _id: invoice.id }, { note: note })
+      console.log('Note Updated!')
+
+      res.redirect('/dashboard')
+
+    } catch (err) {
+      console.log(err);
+    }
+  },
   createPost: async (req, res) => {
     try {
       // Upload image to cloudinary

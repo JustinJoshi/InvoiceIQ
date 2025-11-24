@@ -11,7 +11,7 @@ router.post("/createPost", upload.single("file"), postsController.createPost);
 
 router.post("/addSource", ensureAuth, postsController.addSource);
 
-// router.post("/createNote", ensureAuth, postsController.creteNote)
+router.post("/createNote/:index", ensureAuth, postsController.createNote)
 
 router.post("/createManualInvoice", upload.array("file", 25), postsController.createManualInvoice)
 

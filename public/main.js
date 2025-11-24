@@ -79,30 +79,34 @@ async function makeChart(e) {
         onClick: (event, activeElements) => {
           if (activeElements.length > 0) {
             const element = activeElements[0];
-            const datasetIndex = element.datasetIndex;
             const index = element.index;
 
-            const label = newChart.data.labels[index];
-            const value = newChart.data.datasets[datasetIndex].data[index];
-
-            const invoice = result[index].file
+            const invoice = result[index].file;
 
             document.querySelector('#invoice').innerHTML = `
-            <section class="invCont">
-              <div>
-                <a href=${invoice} target="_blank">View Invoice</a>
+            <div class="bigCont">
+              <div>Currently Viewing Invoice Number ${index}</div>
+              <section class="invCont">
+                <div>
+                  <a href=${invoice} target="_blank">View Invoice</a>
+                </div>
+                <div>
+                  <form action="/post/createNote/${index}" method="POST">
+                    <label for="note" class="form-label">Create Note</label>
+                    <input type="text" id="hi" name="note">
+                    <button type="submit">Create!</button>
+                  </form>
+                  <div id="notes"></div>
+                </div>
+              </section>
+              <div id="notesCont">
+                <span>Invoice Note:</span>
+                <div id="notesList"></div>
               </div>
-              <div>
-                <form action="/createNote" method="POST">
-                  <input type="text">
-                  <button type="submit">Create Note</button>
-                </form>
-                <div id="notes"></div>
-              </div>
-            </section>
+            </div>
             `
 
-            
+            document.querySelector('#notesList').innerHTML = `<div>${result[index].note}</div>`
 
             console.log(`Clicked: ${label}, Value: ${value}`);
           }
