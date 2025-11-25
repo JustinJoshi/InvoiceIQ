@@ -1,22 +1,17 @@
 const mongoose = require("mongoose");
 
-const invoiceSchema = new mongoose.Schema({
-  file: {
-
-  },
-  aiResponse: {
-
+const noteSchema = new mongoose.Schema({
+  invoiceID: {
+    type: String,
+    required: true,
   },
   note: {
     
   },
-  isManualEntry: {
-    type: Boolean,
-    required: true,
-  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: "User",
+    required: true,
   },
   createdAt: {
     type: Date,
@@ -24,4 +19,4 @@ const invoiceSchema = new mongoose.Schema({
   },
 });
 
-module.exports = mongoose.model("Invoice", invoiceSchema);
+module.exports = mongoose.model("Note", noteSchema);

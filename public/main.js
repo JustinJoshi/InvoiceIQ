@@ -15,21 +15,21 @@ async function makeChart(e) {
       throw new Error(`Response status: ${response.status}`);
     }
     const result = await response.json();
+
+
     const targetId = e.originalTarget.id;
 
     const dataType = document.querySelector("#chartType").value;
 
     let prices = [];
     let purchaseDate = [];
-
-
     if (dataType === 'unit') {
-      result.forEach((e, i) => {
+      result.userCharts.forEach((e, i) => {
         prices.push(e.aiResponse.items[+targetId].unit_price)
         purchaseDate.push(e.aiResponse.invoice_date)
       });
     } else if (dataType === 'total') {
-      result.forEach((e, i) => {
+      result.userCharts.forEach((e, i) => {
         prices.push(e.aiResponse.items[+targetId].total)
         purchaseDate.push(e.aiResponse.invoice_date)
       });
@@ -41,8 +41,7 @@ async function makeChart(e) {
 
     const charts = result.charts
 
-    itemName = result[0].aiResponse.items[+targetId].description
-    console.log(itemName)
+    let itemName = result.userCharts[0].aiResponse.items[+targetId].description
 
     if (hasChart) newChart.destroy()
     //create chart
@@ -69,7 +68,11 @@ async function makeChart(e) {
           y: {
             beginAtZero: true,
             grid: { color: '#2d2f33' },
-            ticks: { color: '#9fa3af' }
+            ticks: { color: '#9fa3af',
+              callback: function(value,index,ticks){
+                return '$' + value;
+              }
+             },
           },
           x: {
             grid: { display: false },
@@ -81,48 +84,64 @@ async function makeChart(e) {
             const element = activeElements[0];
             const index = element.index;
 
-            const invoice = result[index].file;
+            const invoice = result.userCharts[index].file;
 
             document.querySelector('#invoice').innerHTML = `
-            <div class="bigCont">
-              <div>Currently Viewing Invoice Number ${index}</div>
-              <section class="invCont">
-                <div>
-                  <a href=${invoice} target="_blank">View Invoice</a>
-                </div>
-                <div>
-                  <form action="/post/createNote/${index}" method="POST">
-                    <label for="note" class="form-label">Create Note</label>
-                    <input type="text" id="hi" name="note">
-                    <button type="submit">Create!</button>
-                  </form>
-                  <div id="notes"></div>
-                </div>
-              </section>
-              <div id="notesCont">
-                <span>Invoice Note:</span>
-                <div id="notesList"></div>
-              </div>
+            <div class="invoice-notes-panel">
+    <div class="invoice-header">
+        <div class="invoice-number">
+            Currently Viewing Invoice <span>${index}</span>
+        </div>
+        <a href="${invoice}" 
+           class="view-invoice-btn" 
+           target="_blank">
+            View Invoice PDF
+        </a>
+    </div>
+
+    <div class="notes-grid">
+        <!-- Note Input Section -->
+        <div class="note-input-section">
+            <div class="section-title">Create New Note</div>
+            <form action="/post/createNote/${index}" method="POST" class="note-form">
+                <textarea 
+                    class="note-textarea" 
+                    name="note" 
+                    placeholder="Add notes about this invoice"
+                    required></textarea>
+                <button type="submit" class="submit-btn">Add Note</button>
+            </form>
+        </div>
+
+        <!-- Notes Display Section -->
+        <div class="notes-display-section">
+            <div class="section-title">Invoice Notes</div>
+            <div class="notes-list">
+                
             </div>
+        </div>
+    </div>
+</div>
             `
+            document.querySelector('.notes-list').innerHTML = ''
+            console.log(result.userCharts[index]._id)
+            result.notes.forEach((e) => {
+              if (result.userCharts[index]._id === e.invoiceID) {
+                document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${e.createdAt.slice(0, -14)}]</span> ${e.note}</div>`
+              }
+            })
+          
 
-            if (result[index].note === undefined) {
-              document.querySelector('#notesList').innerHTML = ''
-            } else {
-              document.querySelector('#notesList').innerHTML = `<div>${result[index].note}</div>`
-
-            }
-
-            console.log(`Clicked: ${label}, Value: ${value}`);
-          }
+          console.log(`Clicked: ${label}, Value: ${value}`);
         }
       }
+    }
     })
 
-    hasChart = true;
-  } catch (error) {
-    console.error(error.message);
-  }
+  hasChart = true;
+} catch (error) {
+  console.error(error.message);
+}
 }
 
 

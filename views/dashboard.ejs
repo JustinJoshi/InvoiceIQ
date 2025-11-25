@@ -64,10 +64,64 @@
             gap: 30px;
         }
 
+        .noteInput{
+            color: #1e293b;
+            width: 1000px;
+            height: 200px;
+            background-color: #1e293b;
+        }
+
+        .formButton{
+            width: 50px;
+            margin: auto;
+        }
+
+        .anchor{
+            margin: auto;
+        }
+
+        .anchorCont{
+            margin-top: 40px;
+            display: flex;
+        }
+
+        .form-label{
+            margin: auto;
+        }
+
+        form{
+            width: 100%;
+            display: flex;
+            flex-flow: column;
+            gap: 30px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--background);
+            border: 1px solid var(--border);
+            border-radius: 0.5rem;
+            color: var(--text-primary);
+            font-size: 0.875rem;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
         .invCont{
             display: flex;
             justify-content: space-around;
             gap: 60px;
+            width: 100%;
+            align-items: center;
+        }
+
+        .smallCont{
+            width: 100%;
         }
 
         a:visited{
@@ -91,48 +145,6 @@
             display: flex;
             min-height: 100vh;
             width: 100%;
-        }
-
-        /* Rainbow border effect */
-        .rainbow-border {
-            position: relative;
-            background: var(--surface);
-            border-radius: 1rem;
-        }
-
-        .rainbow-border::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            right: -1px;
-            bottom: -1px;
-            background: linear-gradient(90deg,
-                    #ff0080, #ff0080, #ff8c00, #40e0d0, #4169e1, #8a2be2, #ff0080);
-            background-size: 300% 300%;
-            border-radius: 1rem;
-            z-index: -1;
-            animation: rainbow-border 6s ease infinite;
-        }
-
-        .rainbow-border-static {
-            position: relative;
-            background: var(--surface);
-            border-radius: 1rem;
-        }
-
-        .rainbow-border-static::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: -1px;
-            right: -1px;
-            bottom: -1px;
-            background: linear-gradient(135deg,
-                    #ff0080 0%, #ff8c00 25%, #40e0d0 50%, #4169e1 75%, #8a2be2 100%);
-            border-radius: 1rem;
-            z-index: -1;
-            opacity: 0.6;
         }
 
         /* Sidebar */
@@ -524,7 +536,181 @@
         }
 
 
+         /* Invoice Notes Section - REDESIGNED */
+         .invoice-notes-panel {
+             background: var(--surface);
+             border: 1px solid var(--border);
+             border-radius: 1rem;
+             padding: 1.5rem;
+             margin-bottom: 2rem;
+         }
 
+         .invoice-header {
+             display: flex;
+             justify-content: space-between;
+             align-items: center;
+             margin-bottom: 1.5rem;
+             padding-bottom: 1rem;
+             border-bottom: 1px solid var(--border);
+         }
+
+         .invoice-number {
+             font-size: 0.875rem;
+             color: var(--text-secondary);
+         }
+
+         .invoice-number span {
+             color: var(--primary);
+             font-weight: 600;
+         }
+
+         .view-invoice-btn {
+             padding: 0.5rem 1rem;
+             border: none;
+             border-radius: 0.5rem;
+             color: white;
+             cursor: pointer;
+             font-size: 0.875rem;
+             font-weight: 600;
+             text-decoration: none;
+             transition: all 0.2s ease;
+             display: inline-block;
+         }
+
+         .view-invoice-btn:hover {
+             transform: translateY(-1px);
+             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+         }
+
+         .notes-grid {
+             display: grid;
+             grid-template-columns: 1fr 1fr;
+             gap: 1.5rem;
+         }
+
+         .note-input-section {
+             background: var(--background);
+             border: 1px solid var(--border);
+             border-radius: 0.75rem;
+             padding: 1.25rem;
+         }
+
+         .section-title {
+             font-size: 0.875rem;
+             font-weight: 600;
+             color: var(--text-primary);
+             margin-bottom: 1rem;
+             display: flex;
+             align-items: center;
+             gap: 0.5rem;
+         }
+
+         .section-title::before {
+             font-size: 1rem;
+         }
+
+         .note-form {
+             display: flex;
+             flex-direction: column;
+             gap: 0.75rem;
+         }
+
+         .note-textarea {
+             width: 100%;
+             min-height: 120px;
+             padding: 0.75rem;
+             background: var(--surface);
+             border: 1px solid var(--border);
+             border-radius: 0.5rem;
+             color: var(--text-primary);
+             font-size: 0.875rem;
+             font-family: inherit;
+             resize: vertical;
+             transition: all 0.2s ease;
+         }
+
+         .note-textarea:focus {
+             outline: none;
+             border-color: var(--primary);
+             box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+         }
+
+         .note-textarea::placeholder {
+             color: var(--text-secondary);
+         }
+
+         .submit-btn {
+             padding: 0.625rem 1.25rem;
+             border: none;
+             border-radius: 0.5rem;
+             cursor: pointer;
+             font-size: 0.875rem;
+             font-weight: 500;
+             transition: all 0.2s ease;
+             align-self: flex-start;
+         }
+
+         .submit-btn:hover {
+             transform: translateY(-1px);
+             box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+         }
+
+         .notes-display-section {
+             background: var(--background);
+             border: 1px solid var(--border);
+             border-radius: 0.75rem;
+             padding: 1.25rem;
+         }
+
+         .notes-list {
+             display: flex;
+             flex-direction: column;
+             gap: 0.75rem;
+             max-height: 200px;
+             overflow-y: auto;
+         }
+
+         .note-item {
+             background: var(--surface);
+             border: 1px solid var(--border);
+             border-radius: 0.5rem;
+             padding: 0.875rem;
+             font-size: 0.875rem;
+             line-height: 1.5;
+             color: var(--text-primary);
+             transition: all 0.2s ease;
+         }
+
+         .note-item:hover {
+             border-color: var(--primary);
+             background: rgba(59, 130, 246, 0.05);
+         }
+
+         .empty-notes {
+             text-align: center;
+             color: var(--text-secondary);
+             font-size: 0.875rem;
+             padding: 2rem;
+         }
+
+         /* Scrollbar styling */
+         .notes-list::-webkit-scrollbar {
+             width: 6px;
+         }
+
+         .notes-list::-webkit-scrollbar-track {
+             background: var(--background);
+             border-radius: 3px;
+         }
+
+         .notes-list::-webkit-scrollbar-thumb {
+             background: var(--border);
+             border-radius: 3px;
+         }
+
+         .notes-list::-webkit-scrollbar-thumb:hover {
+             background: var(--primary);
+         }
 
 
         /* Responsive */
@@ -532,16 +718,16 @@
             .sidebar {
                 width: 14rem;
             }
-
+        
             .main-content {
                 margin-left: 14rem;
                 width: calc(100% - 14rem);
             }
-
+        
             .dashboard-grid {
                 grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
             }
-        }
+    }
 
         @media (max-width: 768px) {
             .sidebar {
@@ -655,7 +841,6 @@
 
                 <!-- Stats Grid -->
                 <div class="dashboard-grid">
-                    <% console.log(typeof aiResponse == undefined, typeof aiResponse) %>
                     <% if(typeof aiResponse === 'undefined'){ %>
                      <%   console.log(`aiResponse is ${typeof aiResponse}, loading dashboard without data`) %>
                     <% }else{ %>
@@ -671,9 +856,6 @@
                             <% }else { %>
                                 <span id=<%=`${ i}`%>>🡶</span>
                             <% } %>
-
-                            <% console.log('LAST', userCharts[userCharts.length - 1].aiResponse.items[i], "PREVIOUS", userCharts[userCharts.length - 2].aiResponse.items[i]) %>
-                            
                             <span id=<%=`${ i}`%>>12% from last week</span>
                         </div>
                     </div>

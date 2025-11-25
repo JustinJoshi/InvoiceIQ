@@ -3,6 +3,8 @@ const Post = require("../models/Post");
 const Chart = require("../models/Chart");
 const pdf2json = require("../middleware/pdf2json");
 const Invoice = require("../models/Invoice");
+const mongoose = require('mongoose');
+const Note = require('../models/Note');
 
 const Anthropic = require('@anthropic-ai/sdk');
 const fs = require('fs').promises;
@@ -67,7 +69,6 @@ module.exports = {
       } else {
         console.log('hi')
         const aiResponse = userCharts[0].aiResponse
-        console.log(userCharts, aiResponse)
         res.render("dashboard.ejs", { user: req.user, userCharts: userCharts, aiResponse: aiResponse });
       }
     } catch (err) {
@@ -223,6 +224,7 @@ If there are multiple items, fill them into the array following the format.`
               isManualEntry: true,
               user: req.user.id,
             });
+            
             console.log('Invoice created in DB. Uploaded cloudinary ID as file')
 
             console.log('Successfully parsed invoice data:', invoiceData);
@@ -250,12 +252,15 @@ If there are multiple items, fill them into the array following the format.`
       const index = req.params.index;
       const note = req.body.note;
 
+      console.log(index)
       const userCharts = await Invoice.find({ user: req.user.id})
       const invoice = userCharts[index]
 
-      console.log(index)
-
-      await Invoice.findOneAndUpdate({ _id: invoice.id }, { note: note })
+      await Note.create({
+        invoiceID : invoice._id,
+        note: note,
+        user: req.user.id,
+      })
       console.log('Note Updated!')
 
       res.redirect('/dashboard')
