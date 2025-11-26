@@ -2,9 +2,9 @@ const ctx = document.getElementById('activityChart');
 
 let hasChart = false;
 let newChart;
+let index;
 
 document.querySelector('.dashboard-grid').addEventListener('click', makeChart);
-
 
 
 async function makeChart(e) {
@@ -68,11 +68,12 @@ async function makeChart(e) {
           y: {
             beginAtZero: true,
             grid: { color: '#2d2f33' },
-            ticks: { color: '#9fa3af',
-              callback: function(value,index,ticks){
+            ticks: {
+              color: '#9fa3af',
+              callback: function (value, index, ticks) {
                 return '$' + value;
               }
-             },
+            },
           },
           x: {
             grid: { display: false },
@@ -82,7 +83,7 @@ async function makeChart(e) {
         onClick: (event, activeElements) => {
           if (activeElements.length > 0) {
             const element = activeElements[0];
-            const index = element.index;
+            index = element.index;
 
             const invoice = result.userCharts[index].file;
 
@@ -109,8 +110,8 @@ async function makeChart(e) {
                     name="note" 
                     placeholder="Add notes about this invoice"
                     required></textarea>
-                <button type="submit" class="submit-btn">Add Note</button>
             </form>
+            <button class="submit-btn">Add Note</button>
         </div>
 
         <!-- Notes Display Section -->
@@ -130,18 +131,51 @@ async function makeChart(e) {
                 document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${e.createdAt.slice(0, -14)}]</span> ${e.note}</div>`
               }
             })
-          
+          }
 
-          console.log(`Clicked: ${label}, Value: ${value}`);
+          document.querySelector('.submit-btn').addEventListener('click', addNote)
+
+
+          async function addNote() {
+            const note = document.querySelector('.note-textarea').value
+            console.log(note)
+            if (index === undefined) return console.error('index is undefined!')
+            console.log(index)
+            const url = `/post/createNote/${index}`;
+            try {
+              const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  'note': note,
+                })
+              });
+              if (!response.ok) {
+                throw new Error(`Response status: ${response.status}`);
+              }
+
+              const result = await response.json();
+              console.log(result);
+
+              const newNote = result[result.length - 1]
+
+              document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${newNote.createdAt.slice(0, -14)}]</span> ${newNote.note}</div>`
+
+              const messageBody = document.querySelector('.notes-list');
+              messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
+
+            } catch (error) {
+              console.error(error.message);
+            }
+          }
         }
       }
-    }
     })
 
-  hasChart = true;
-} catch (error) {
-  console.error(error.message);
-}
+    hasChart = true;
+  } catch (error) {
+    console.error(error.message);
+  }
 }
 
 

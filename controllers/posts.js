@@ -225,7 +225,7 @@ If there are multiple items, fill them into the array following the format.`
               user: req.user.id,
             });
             
-            console.log('Invoice created in DB. Uploaded cloudinary ID as file')
+            console.log('Invoice created in DB. Uploaded cloudinary ID as file');
 
             console.log('Successfully parsed invoice data:', invoiceData);
 
@@ -252,18 +252,22 @@ If there are multiple items, fill them into the array following the format.`
       const index = req.params.index;
       const note = req.body.note;
 
-      console.log(index)
-      const userCharts = await Invoice.find({ user: req.user.id})
-      const invoice = userCharts[index]
+      console.log(note, "NOTE")
+
+      console.log(index);
+      const userCharts = await Invoice.find({ user: req.user.id});
+      const invoice = userCharts[index];
 
       await Note.create({
         invoiceID : invoice._id,
         note: note,
         user: req.user.id,
-      })
-      console.log('Note Updated!')
+      });
+      console.log('Note Updated!');
 
-      res.redirect('/dashboard')
+      const newNote = await Note.find({ user: req.user.id })
+
+      res.send(JSON.stringify(newNote)).status(200);
 
     } catch (err) {
       console.log(err);
