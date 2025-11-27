@@ -81,7 +81,7 @@ async function makeChart(e) {
             ticks: { color: '#9fa3af' }
           }
         },
-        onClick: (event, activeElements) => {
+        onClick: async (event, activeElements) => {
           if (activeElements.length > 0) {
             const element = activeElements[0];
             index = element.index;
@@ -92,7 +92,7 @@ async function makeChart(e) {
             <div class="invoice-notes-panel">
     <div class="invoice-header">
         <div class="invoice-number">
-            Currently Viewing Invoice <span>${index}</span>
+            Currently Viewing Invoice <span>${index + 1}</span>
         </div>
         <a href="${invoice}" 
            class="view-invoice-btn" 
@@ -125,11 +125,31 @@ async function makeChart(e) {
     </div>
 </div>
             `
+
+            let newRes
+            async function getNewData() {
+              const url = "/makeChart";
+              try {
+                const response = await fetch(url);
+                if (!response.ok) {
+                  throw new Error(`Response status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log(result, 'NEW RESULT');
+
+                newRes = result
+              } catch (error) {
+                console.error(error.message);
+              }
+            }
+            await getNewData()
+
             document.querySelector('.notes-list').innerHTML = ''
-            console.log(result.userCharts[index]._id)
-            result.notes.forEach((e) => {
-              if (result.userCharts[index]._id === e.invoiceID) {
-                document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${e.createdAt.slice(0, -14)}]</span> ${e.note} <button class="delBtn" id="${e._id}">Delete</button></div>`
+            console.log(newRes.userCharts[index]._id)
+            newRes.notes.forEach((e) => {
+              if (newRes.userCharts[index]._id === e.invoiceID) {
+                document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${e.createdAt.slice(0, -14)}]</span> <span id="note">${e.note}</span> <button class="delBtn" id="${e._id}">Delete</button></div>`
               }
             })
           }
@@ -160,7 +180,7 @@ async function makeChart(e) {
 
               const newNote = result[result.length - 1]
 
-              document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${newNote.createdAt.slice(0, -14)}]</span> ${newNote.note}<button class="delBtn" id="${newNote._id}">Delete</button></div>`
+              document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${newNote.createdAt.slice(0, -14)}]</span> <span id="note">${newNote.note} </span><button class="delBtn" id="${newNote._id}">Delete</button></div>`
 
               const messageBody = document.querySelector('.notes-list');
               messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
