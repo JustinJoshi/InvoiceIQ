@@ -348,57 +348,6 @@
                 </div>
 
                 <!-- Manual Entry Section -->
-                <div class="chart-panel" style="margin-bottom: 3rem;">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Quick Manual Entry</h3>
-
-                        <p style="color: var(--text-secondary); font-size: 0.875rem; margin: 0;">Add data points
-                            manually</p>
-                    </div>
-
-                    <form id="manualEntryForm" onsubmit="handleManualEntry(event)" action="/post/addSource"
-                        method="POST">
-                        <div
-                            style="display: grid; grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr)); gap: 1rem; margin-bottom: 1rem;">
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label class="form-label" for="category">Category</label>
-                                <select name="category" id="metricCategory" class="form-select" required>
-                                    <option value="">Select category...</option>
-                                    <option value="finance">Finance</option>
-                                    <option value="fitness">Fitness</option>
-                                    <option value="productivity">Productivity</option>
-                                    <option value="health">Health</option>
-                                    <option value="mood">Mood</option>
-                                    <option value="sleep">Sleep</option>
-                                    <option value="custom">Custom</option>
-                                </select>
-                            </div>
-
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label class="form-label" for="name">Metric Name</label>
-                                <input name="name" type="text" id="metricName" class="form-input"
-                                    placeholder="e.g., Coffee Purchase" required>
-                            </div>
-
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label class="form-label" for="metricValue">Value</label>
-                                <input name="value" type="number" step="0.01" id="metricValue" class="form-input"
-                                    placeholder="e.g., 5.50" required>
-                            </div>
-
-                            <div class="form-group" style="margin-bottom: 0;">
-                                <label class="form-label" for="metricDate">Date</label>
-                                <input name="date" type="date" id="metricDate" class="form-input" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group" style="margin-bottom: 1rem;">
-                            <label class="form-label" for="metricNotes">Notes (Optional)</label>
-                            <input name="notes" type="text" id="metricNotes" class="form-input"
-                                placeholder="Add a note about this entry...">
-                        </div>
-                    </form>
-                </div>
             </div>
         </main>
     </div>

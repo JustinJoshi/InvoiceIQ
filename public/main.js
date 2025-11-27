@@ -3,6 +3,7 @@ const ctx = document.getElementById('activityChart');
 let hasChart = false;
 let newChart;
 let index;
+let noteID;
 
 document.querySelector('.dashboard-grid').addEventListener('click', makeChart);
 
@@ -128,13 +129,13 @@ async function makeChart(e) {
             console.log(result.userCharts[index]._id)
             result.notes.forEach((e) => {
               if (result.userCharts[index]._id === e.invoiceID) {
-                document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${e.createdAt.slice(0, -14)}]</span> ${e.note}</div>`
+                document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${e.createdAt.slice(0, -14)}]</span> ${e.note} <button class="delBtn" id="${e._id}">Delete</button></div>`
               }
             })
           }
 
           document.querySelector('.submit-btn').addEventListener('click', addNote)
-
+          document.querySelector('.notes-list').addEventListener('click', deleteNote)
 
           async function addNote() {
             const note = document.querySelector('.note-textarea').value
@@ -159,13 +160,44 @@ async function makeChart(e) {
 
               const newNote = result[result.length - 1]
 
-              document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${newNote.createdAt.slice(0, -14)}]</span> ${newNote.note}</div>`
+              document.querySelector('.notes-list').innerHTML += `<div><span class="timestamp">[${newNote.createdAt.slice(0, -14)}]</span> ${newNote.note}<button class="delBtn" id="${newNote._id}">Delete</button></div>`
 
               const messageBody = document.querySelector('.notes-list');
               messageBody.scrollTop = messageBody.scrollHeight - messageBody.clientHeight;
 
+
+              console.log('added event listener?');
+
             } catch (error) {
               console.error(error.message);
+            }
+          }
+
+
+
+          async function deleteNote(e) {
+            const target = e.target.closest('.delBtn')
+
+            if (target) {
+              console.log(target.id)
+              const url = `/post/deleteNote/${target.id}`;
+              try {
+                const response = await fetch(url, {
+                  method: "delete",
+                });
+                if (!response.ok) {
+                  throw new Error(`Response status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log(result._id, 'id from server');
+
+                target.parentNode.remove()
+
+
+              } catch (error) {
+                console.error(error.message);
+              }
             }
           }
         }

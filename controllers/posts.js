@@ -322,4 +322,17 @@ If there are multiple items, fill them into the array following the format.`
       res.redirect("/profile");
     }
   },
+  deleteNote: async (req, res) => {
+    try {
+      // Find post by id
+      let note = await Note.findById({ _id: req.params.id });
+      console.log(note)
+      // Delete post from db
+      await Note.remove({ _id: req.params.id });
+      console.log("Deleted Post");
+      res.send(JSON.stringify({ _id: req.params.id }))
+    } catch (err) {
+      res.send(err)
+    }
+  },
 };
