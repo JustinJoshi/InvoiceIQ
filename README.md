@@ -4,9 +4,10 @@ A full-stack personal metrics dashboard that helps you track and visualize data 
 
 **Link to project:**  [InvoiceIQ Dashboard](https://invoiceiq.onrender.com/)
 
-<img width="2127" height="1279" alt="2025-12-09_16-14" src="https://github.com/user-attachments/assets/9852dd58-a86b-47fe-91f2-04594b30cc23" />
-<img width="2455" height="1246" alt="2025-12-09_16-12" src="https://github.com/user-attachments/assets/4c285b4c-a55b-46a5-a732-8931689559b9" />
 <img width="2459" height="1246" alt="2025-12-09_16-10" src="https://github.com/user-attachments/assets/f5bafba9-119a-460e-941e-3d91f9de32b1" />
+<img width="2455" height="1246" alt="2025-12-09_16-12" src="https://github.com/user-attachments/assets/4c285b4c-a55b-46a5-a732-8931689559b9" />
+<img width="2127" height="1279" alt="2025-12-09_16-14" src="https://github.com/user-attachments/assets/9852dd58-a86b-47fe-91f2-04594b30cc23" />
+
 
 
 ## How It's Made:
