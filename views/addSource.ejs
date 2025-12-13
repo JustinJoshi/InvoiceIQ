@@ -38,6 +38,19 @@
             width: 100%;
         }
 
+        .submitForm{
+            margin-top: 30px;
+        }
+
+        .submitBtn{
+            padding: 5px 10px;
+            border-radius: 5px;
+        }
+
+        .form-control{
+            padding: 20px;
+        }
+
         .sidebar {
             width: 16rem;
             background: var(--surface);
@@ -319,20 +332,12 @@
                     <div class="page-header">
                         <h1>Add Data Source</h1>
                         <p>Connect external services to track and visualize your personal metrics</p>
-                        <form action="/post/createManualInvoice" enctype="multipart/form-data" method="POST">
+                        <form action="/post/createManualInvoice" enctype="multipart/form-data" method="POST" class="submitForm">
                             <div class="mb-3">
-                                <label for="title" class="form-label">Title</label>
-                                <input type="text" class="form-control" id="title" name="title">
-                            </div>
-                            <div class="mb-3">
-                                <label for="caption" class="form-label">Caption</label>
-                                <textarea class="form-control" id="caption" name="caption"></textarea>
-                            </div>
-                            <div class="mb-3">
-                                <label for="imgUpload" class="form-label">Image</label>
+                                <label for="imgUpload" class="form-label">Pdf</label>
                                 <input type="file" class="form-control" id="imageUpload" multiple name="file">
                             </div>
-                            <button type="submit">Submit!</button>
+                            <button type="submit" class="submitBtn">Submit!</button>
                         </form>
                     </div>
                     <!-- <form action="/gmailAuth" method="GET">

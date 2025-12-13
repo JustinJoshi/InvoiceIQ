@@ -10,6 +10,7 @@ const { ensureAuth, ensureGuest } = require("../middleware/auth");
 //Main Routes - simplified for now
 router.get("/", homeController.getIndex);
 router.get("/dashboard", ensureAuth, postsController.getProfile);
+router.get("/notes", ensureAuth, postsController.getNotes);
 router.get("/gmailAuth", ensureAuth, gmailController.getGmailAuth);
 router.get("/dashboardRainbow", ensureAuth, postsController.getRainbow);
 router.get("/addSourceRainbow", ensureAuth, postsController.getSourceRainbow);

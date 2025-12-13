@@ -75,6 +75,22 @@ module.exports = {
       console.log(err);
     }
   },
+  getNotes: async (req, res) => {
+    try {
+      const userNotes = await Note.find({ user: req.user.id })
+      console.log(userNotes)
+      // if (!userCharts[0]) {
+      //   console.log(`userCharts is ${typeof userCharts[0]}, rendering without loading dashboard data.`);
+      //   res.render("notes.ejs")
+      // } else {
+      //   console.log('hi')
+      //   const aiResponse = userCharts[0].aiResponse
+      //   res.render("dashboard.ejs", { user: req.user, userCharts: userCharts, aiResponse: aiResponse });
+      // }
+    } catch (err) {
+      console.log(err);
+    }
+  },
   getRainbow: async (req, res) => {
     try {
       const posts = await Post.find({ user: req.user.id });
@@ -211,7 +227,7 @@ If there are multiple items, fill them into the array following the format.`
             const jsonText = response.content[0].text;
             console.log('Raw JSON text:', jsonText);
 
-
+            //gets rid of all formatting
             const cleanJson = jsonText.replace(/```json\n?/g, '').replace(/```\n?/g, '').trim();
 
             if (!JSON.parse(cleanJson)) throw error
